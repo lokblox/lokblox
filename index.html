@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>RES – Roblox Economy Revival</title>
 
-  <!-- Three.js as ES module, exposed globally -->
+  <!-- Three.js as ES module -->
   <script type="module">
     import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
     window.THREE = THREE;
@@ -12,19 +12,20 @@
 
   <style>
     :root {
-      --bg: #f2f2f2;
+      --bg: #e3e6ea;
       --bg-card: #ffffff;
-      --bg-card-soft: #fafafa;
-      --border-soft: #e0e0e0;
-      --text-main: #333;
-      --text-muted: #777;
+      --bg-card-soft: #f5f6f8;
+      --border-soft: #d1d5db;
+      --text-main: #111827;
+      --text-muted: #6b7280;
       --accent: #00a2ff;
       --accent-soft: #e3f2fd;
       --shadow-soft: 0 2px 6px rgba(0,0,0,0.08);
-      --nav-bg: #ffffff;
-      --nav-border: #e0e0e0;
-      --nav-text: #333;
-      --search-bg: #f3f4f6;
+      --nav-bg: #f8fafc;
+      --nav-border: #d1d5db;
+      --nav-text: #111827;
+      --search-bg: #e5e7eb;
+      --notif-bg: #f97316;
     }
     body.dark {
       --bg: #111827;
@@ -40,6 +41,7 @@
       --nav-border: #1f2933;
       --nav-text: #e5e7eb;
       --search-bg: #1f2933;
+      --notif-bg: #f97316;
     }
 
     body {
@@ -53,7 +55,7 @@
     .top-bar {
       background: var(--nav-bg);
       border-bottom: 1px solid var(--nav-border);
-      padding: 8px 16px;
+      padding: 6px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -68,23 +70,38 @@
       gap: 16px;
     }
 
-    .logo-text {
-      font-size: 22px;
+    .logo-box {
+      width: 32px;
+      height: 32px;
+      border-radius: 4px;
+      background: #00a2ff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
       font-weight: 900;
-      color: var(--accent);
-      letter-spacing: 1px;
+      font-size: 18px;
+      margin-right: 4px;
+    }
+
+    .logo-text {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--nav-text);
+      letter-spacing: 0.5px;
     }
 
     .nav-links {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
+      margin-left: 10px;
     }
 
     .nav-links a {
       color: var(--nav-text);
       text-decoration: none;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       cursor: pointer;
       padding: 4px 6px;
@@ -154,19 +171,51 @@
       filter: brightness(0.9);
     }
 
+    .notif-bell {
+      position: relative;
+      cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
+    }
+
+    .notif-bell:hover {
+      background: var(--bg-card-soft);
+    }
+
+    .notif-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--notif-bg);
+      color: #fff;
+      border-radius: 999px;
+      padding: 1px 5px;
+      font-size: 10px;
+      font-weight: 700;
+    }
+
     .verified-badge {
-      display: inline-block;
-      background: #1d4ed8;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #2563eb;
       color: #fff;
       font-size: 10px;
-      padding: 2px 6px;
+      padding: 1px 5px;
       border-radius: 999px;
       margin-left: 4px;
+      border: 1px solid #93c5fd;
+    }
+
+    .verified-badge::before {
+      content: "✔";
+      font-size: 9px;
+      margin-right: 2px;
     }
 
     .container {
       max-width: 1200px;
-      margin: 20px auto 40px;
+      margin: 16px auto 40px;
       display: flex;
       gap: 16px;
       padding: 0 12px;
@@ -438,13 +487,156 @@
       font-size: 12px;
       margin-top: 4px;
     }
+
+    .ad-card {
+      background: var(--bg-card-soft);
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+      padding: 6px 8px;
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .ad-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+    }
+
+    .notif-panel {
+      position: absolute;
+      right: 10px;
+      top: 40px;
+      width: 260px;
+      background: var(--bg-card);
+      border-radius: 6px;
+      border: 1px solid var(--border-soft);
+      box-shadow: var(--shadow-soft);
+      padding: 8px 10px;
+      font-size: 12px;
+      z-index: 20;
+    }
+
+    .notif-item {
+      border-bottom: 1px solid var(--border-soft);
+      padding: 4px 0;
+    }
+
+    .notif-item:last-child {
+      border-bottom: none;
+    }
+
+    .friend-list {
+      font-size: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .friend-entry {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 3px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .friend-entry:last-child {
+      border-bottom: none;
+    }
+
+    .chat-box {
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+      padding: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      background: var(--bg-card-soft);
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+
+    .chat-line {
+      margin-bottom: 3px;
+    }
+
+    .chat-line span {
+      font-weight: 600;
+    }
+
+    .trade-window {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .trade-window-column {
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+      padding: 6px;
+      background: var(--bg-card-soft);
+      font-size: 11px;
+    }
+
+    .trade-window-items {
+      max-height: 120px;
+      overflow-y: auto;
+      margin-top: 4px;
+    }
+
+    .trade-window-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 2px 0;
+      border-bottom: 1px solid var(--border-soft);
+    }
+
+    .trade-window-item:last-child {
+      border-bottom: none;
+    }
+
+    .user-browser-list {
+      max-height: 180px;
+      overflow-y: auto;
+      font-size: 12px;
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+      padding: 4px 6px;
+      background: var(--bg-card-soft);
+    }
+
+    .user-browser-entry {
+      padding: 3px 0;
+      border-bottom: 1px solid var(--border-soft);
+      cursor: pointer;
+    }
+
+    .user-browser-entry:last-child {
+      border-bottom: none;
+    }
+
+    .user-browser-entry:hover {
+      background: var(--bg-card);
+    }
+
+    .mini-inventory {
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 11px;
+      border: 1px solid var(--border-soft);
+      border-radius: 4px;
+      padding: 4px 6px;
+      background: var(--bg-card-soft);
+    }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
     <div class="top-left">
-      <div class="logo-text">RES</div>
+      <div style="display:flex;align-items:center;">
+        <div class="logo-box">R</div>
+        <div class="logo-text">RES</div>
+      </div>
       <div class="nav-links">
         <a data-view="home">Home</a>
         <a data-view="catalog">Catalog</a>
@@ -462,9 +654,16 @@
       </div>
     </div>
     <div class="top-right">
+      <div class="notif-bell" id="notifBell">🔔<span class="notif-count" id="notifCount" style="display:none;">0</span></div>
       <span class="nav-username" id="navUserLabel">Guest (view only)</span>
       <button class="nav-btn" id="authButton">Sign Up / Login</button>
     </div>
+  </div>
+
+  <div id="notifPanel" class="notif-panel" style="display:none;">
+    <div style="font-weight:600;margin-bottom:4px;">Notifications</div>
+    <div id="notifList"></div>
+    <button class="btn btn-small" id="notifClearButton" style="margin-top:4px;">Clear</button>
   </div>
 
   <!-- HOME -->
@@ -484,12 +683,16 @@
           <p><strong>Net Worth:</strong> <span id="homeNetWorth">0</span></p>
           <p><strong>Owned Items:</strong> <span id="homeItemCount">0</span></p>
         </div>
+        <div class="panel">
+          <h3>Sponsored Ads</h3>
+          <div id="homeAdsLeft"></div>
+        </div>
       </div>
 
       <div class="column-main">
         <div class="panel">
           <h2>Home</h2>
-          <p class="muted">Welcome to RES – Roblox Economy Revival. Classic 2017-style vibes, fake economy, local-only data.</p>
+          <p class="muted">Welcome to RES – Roblox Economy Revival. Classic 2017-style dashboard, fake economy, local-only data.</p>
         </div>
 
         <div class="panel">
@@ -514,6 +717,10 @@
           <p id="statUsers">Users: 0</p>
           <p id="statItems">Items in Catalog: 0</p>
           <p id="statTrades">Trades Created: 0</p>
+        </div>
+        <div class="panel">
+          <h3>Ads</h3>
+          <div id="homeAdsRight"></div>
         </div>
         <div class="panel">
           <h3>About RES</h3>
@@ -550,14 +757,14 @@
     </div>
   </div>
 
-  <!-- CREATE (CLOTHING) -->
+  <!-- CREATE -->
   <div id="createView" class="view">
     <div class="container">
       <div class="column-main">
         <div class="panel">
           <h2>Create Clothing</h2>
           <p class="muted">
-            Create simple clothing items for others (and you) to buy.<br>
+            Create clothing items for others to buy.<br>
             There is a <strong>30% tax</strong> on sales that goes to Roblox (admin). You receive 70% of the price.
           </p>
           <label class="label">Clothing Name</label>
@@ -567,6 +774,12 @@
           <button class="btn" id="createClothingButton">Upload Clothing</button>
           <div id="createMessage"></div>
           <p class="muted" id="createGuestNote"></p>
+        </div>
+
+        <div class="panel">
+          <h2>Your Clothing & Ads</h2>
+          <p class="muted">Advertise your clothing on the home page.</p>
+          <div id="createClothingList"></div>
         </div>
       </div>
     </div>
@@ -582,6 +795,8 @@
           <p><strong>RES Bux:</strong> <span id="profileCurrency">0</span></p>
           <p><strong>Net Worth:</strong> <span id="profileNetWorth">0</span></p>
           <p><strong>Owned Items:</strong> <span id="profileItemCount">0</span></p>
+          <p><strong>Followers:</strong> <span id="profileFollowers">0</span></p>
+          <p><strong>Following:</strong> <span id="profileFollowing">0</span></p>
         </div>
         <div class="panel">
           <h3>Avatar</h3>
@@ -629,6 +844,31 @@
           <div id="inventoryList" class="catalog-grid"></div>
         </div>
       </div>
+
+      <div class="column-right">
+        <div class="panel">
+          <h3>Users</h3>
+          <div class="user-browser-list" id="userBrowserList"></div>
+        </div>
+        <div class="panel">
+          <h3>Selected User</h3>
+          <div id="selectedUserInfo" class="muted">Select a user to view.</div>
+          <div id="selectedUserActions" style="margin-top:6px;display:none;">
+            <button class="btn btn-small" id="followUserButton">Follow</button>
+            <button class="btn btn-small" id="tradeUserButton">Trade</button>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="mini-inventory" id="selectedUserInventory"></div>
+          </div>
+        </div>
+        <div class="panel">
+          <h3>Friends & Chat</h3>
+          <div class="friend-list" id="friendList"></div>
+          <div class="chat-box" id="chatBox"></div>
+          <input class="input" id="chatInput" placeholder="Message (selected friend)">
+          <button class="btn btn-small" id="chatSendButton" style="margin-top:4px;">Send</button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -638,18 +878,29 @@
       <div class="column-main">
         <div class="panel">
           <h2>Trades</h2>
-          <p class="muted">Create trades between users. Receiver can review, see values, accept, decline, or counter.</p>
+          <p class="muted">Create multi-item trades. Receiver can review, see values, accept, decline, or counter.</p>
 
-          <label class="label">To User</label>
+          <label class="label">Trade With</label>
           <select id="tradeToUserInput" class="select"></select>
 
-          <label class="label">Offer Item (your limited)</label>
-          <select id="tradeOfferItemInput" class="select"></select>
+          <div class="trade-window">
+            <div class="trade-window-column">
+              <strong>Your Offer</strong>
+              <label class="label">Add Item</label>
+              <select id="tradeOfferAddInput" class="select"></select>
+              <button class="btn btn-small" id="tradeOfferAddButton">Add</button>
+              <div class="trade-window-items" id="tradeOfferItems"></div>
+            </div>
+            <div class="trade-window-column">
+              <strong>Your Request</strong>
+              <label class="label">Add Item</label>
+              <select id="tradeRequestAddInput" class="select"></select>
+              <button class="btn btn-small" id="tradeRequestAddButton">Add</button>
+              <div class="trade-window-items" id="tradeRequestItems"></div>
+            </div>
+          </div>
 
-          <label class="label">Request Item (their limited)</label>
-          <select id="tradeRequestItemInput" class="select"></select>
-
-          <button class="btn" id="createTradeButton">Create Trade</button>
+          <button class="btn" id="createTradeButton" style="margin-top:8px;">Send Trade</button>
           <div id="tradeMessage"></div>
           <p class="muted" id="tradesGuestNote"></p>
         </div>
@@ -755,7 +1006,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'res_data_v3';
+    const STORAGE_KEY = 'res_data_v4';
     const ADMIN_USERNAME = 'roblox owner admin';
     const ADMIN_PASSWORD = 'admin';
 
@@ -809,14 +1060,26 @@
           currency: 100000,
           isAdmin: true,
           verified: true,
-          banned: false
+          banned: false,
+          followers: [],
+          following: [],
+          friends: [],
+          messages: [],
+          notifications: []
         };
         saveData();
       } else {
-        db.users[key].isAdmin = true;
-        db.users[key].verified = true;
-        if (db.users[key].currency == null) db.users[key].currency = 100000;
-        if (db.users[key].banned == null) db.users[key].banned = false;
+        const u = db.users[key];
+        u.password = u.password || ADMIN_PASSWORD;
+        u.isAdmin = true;
+        u.verified = true;
+        if (u.currency == null) u.currency = 100000;
+        if (u.banned == null) u.banned = false;
+        u.followers = u.followers || [];
+        u.following = u.following || [];
+        u.friends = u.friends || [];
+        u.messages = u.messages || [];
+        u.notifications = u.notifications || [];
         saveData();
       }
     }
@@ -840,8 +1103,14 @@
             price: item.price,
             type: item.type,
             owner: null,
-            creator: null
+            creator: ADMIN_USERNAME.toLowerCase(),
+            advertised: false
           };
+        });
+        saveData();
+      } else {
+        Object.values(db.items).forEach(it => {
+          if (it.advertised == null) it.advertised = false;
         });
         saveData();
       }
@@ -886,6 +1155,7 @@
         renderHomeSummary();
       }
       if (name === 'admin') renderAdminPanel();
+      if (name === 'create') renderCreateClothingList();
     }
 
     document.querySelectorAll('.nav-links a, button[data-view]').forEach(el => {
@@ -943,7 +1213,12 @@
           currency: 1000,
           isAdmin: false,
           verified: false,
-          banned: false
+          banned: false,
+          followers: [],
+          following: [],
+          friends: [],
+          messages: [],
+          notifications: []
         };
         authMessage.textContent = 'Account created. Logged in as ' + usernameRaw;
         authMessage.className = 'success';
@@ -973,6 +1248,7 @@
       renderHomeSummary();
       updateGuestLocks();
       updateAdminNavVisibility();
+      renderNotifications();
     });
 
     function updateNavUserLabel() {
@@ -1050,6 +1326,33 @@
       });
     }
 
+    const homeAdsLeft = document.getElementById('homeAdsLeft');
+    const homeAdsRight = document.getElementById('homeAdsRight');
+
+    function renderAds() {
+      const ads = Object.values(db.items).filter(i => i.type === 'clothing' && i.advertised);
+      homeAdsLeft.innerHTML = '';
+      homeAdsRight.innerHTML = '';
+      ads.slice(0, 3).forEach(ad => {
+        const div = document.createElement('div');
+        div.className = 'ad-card';
+        div.innerHTML = `
+          <div class="ad-title">${ad.name}</div>
+          <div class="muted">By ${ad.creator || 'Unknown'} • ${ad.price} RES</div>
+        `;
+        homeAdsLeft.appendChild(div);
+      });
+      ads.slice(3, 6).forEach(ad => {
+        const div = document.createElement('div');
+        div.className = 'ad-card';
+        div.innerHTML = `
+          <div class="ad-title">${ad.name}</div>
+          <div class="muted">By ${ad.creator || 'Unknown'} • ${ad.price} RES</div>
+        `;
+        homeAdsRight.appendChild(div);
+      });
+    }
+
     function renderHomeSummary() {
       const user = getCurrentUser();
       const homeUserLabel = document.getElementById('homeUserLabel');
@@ -1080,6 +1383,7 @@
       renderGameRow(continueRow, fakeGames.slice(0, 3));
       renderGameRow(recommendedRow, fakeGames.slice(3));
       renderGameRow(popularRow, fakeGames);
+      renderAds();
     }
 
     const catalogGrid = document.getElementById('catalogGrid');
@@ -1140,6 +1444,7 @@
             user.currency -= item.price;
             if (creator) {
               creator.currency = (creator.currency || 0) + payout;
+              addNotification(creatorKey, `${db.currentUser} bought your clothing "${item.name}" (+${payout} RES after tax).`);
             }
             if (adminUser) {
               adminUser.currency = (adminUser.currency || 0) + tax;
@@ -1180,6 +1485,7 @@
     const createPriceInput = document.getElementById('createPriceInput');
     const createClothingButton = document.getElementById('createClothingButton');
     const createMessage = document.getElementById('createMessage');
+    const createClothingList = document.getElementById('createClothingList');
 
     createClothingButton.addEventListener('click', () => {
       const user = getCurrentUser();
@@ -1209,7 +1515,8 @@
         price,
         type: 'clothing',
         owner: null,
-        creator: db.currentUser
+        creator: db.currentUser,
+        advertised: false
       };
       saveData();
       createMessage.textContent = 'Clothing uploaded. 30% tax will be taken on each sale.';
@@ -1218,7 +1525,45 @@
       createPriceInput.value = '';
       renderCatalog();
       renderStats();
+      renderCreateClothingList();
     });
+
+    function renderCreateClothingList() {
+      const user = getCurrentUser();
+      createClothingList.innerHTML = '';
+      if (!user) {
+        createClothingList.innerHTML = '<p class="muted">Log in to see your clothing.</p>';
+        return;
+      }
+      const myClothes = Object.values(db.items).filter(i => i.type === 'clothing' && i.creator === db.currentUser);
+      if (myClothes.length === 0) {
+        createClothingList.innerHTML = '<p class="muted">You have not created any clothing yet.</p>';
+        return;
+      }
+      myClothes.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-card';
+        div.innerHTML = `
+          <div class="item-thumb">${itemInitials(item.name)}</div>
+          <div class="item-content">
+            <div class="item-name">${item.name}</div>
+            <div class="item-meta">Price: ${item.price} RES</div>
+            <span class="badge badge-clothing">CLOTHING</span>
+          </div>
+        `;
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-small';
+        btn.textContent = item.advertised ? 'Remove Ad' : 'Advertise';
+        btn.addEventListener('click', () => {
+          item.advertised = !item.advertised;
+          saveData();
+          renderCreateClothingList();
+          renderAds();
+        });
+        div.querySelector('.item-content').appendChild(btn);
+        createClothingList.appendChild(div);
+      });
+    }
 
     const bodyColorInput = document.getElementById('bodyColorInput');
     const hatInput = document.getElementById('hatInput');
@@ -1233,13 +1578,15 @@
     const profileItemCount = document.getElementById('profileItemCount');
     const profileCurrency = document.getElementById('profileCurrency');
     const profileVerified = document.getElementById('profileVerified');
+    const profileFollowers = document.getElementById('profileFollowers');
+    const profileFollowing = document.getElementById('profileFollowing');
     const inventoryList = document.getElementById('inventoryList');
 
     const homeAvatarContainer = document.getElementById('homeAvatarContainer');
     const profileAvatarContainer = document.getElementById('profileAvatarContainer');
 
-    let bodyMesh, hatMesh, accessoryMesh;
-    let bodyMeshProfile, hatMeshProfile, accessoryMeshProfile;
+    let bodyMesh, hatMesh, accessoryMesh, limitedMesh;
+    let bodyMeshProfile, hatMeshProfile, accessoryMeshProfile, limitedMeshProfile;
 
     function initAvatar3D(container, isProfile) {
       const width = container.clientWidth || 220;
@@ -1305,8 +1652,15 @@
       accessory.position.set(0, 1.7, 0.4);
       group.add(accessory);
 
+      const limitedGeo = new THREE.BoxGeometry(0.6, 0.3, 0.6);
+      const limitedMat = new THREE.MeshStandardMaterial({ color: 0xffd700 });
+      const limited = new THREE.Mesh(limitedGeo, limitedMat);
+      limited.position.set(0, 2.3, 0);
+      group.add(limited);
+
       hat.visible = false;
       accessory.visible = false;
+      limited.visible = false;
 
       function animate() {
         requestAnimationFrame(animate);
@@ -1319,15 +1673,17 @@
         bodyMeshProfile = body;
         hatMeshProfile = hat;
         accessoryMeshProfile = accessory;
+        limitedMeshProfile = limited;
       } else {
         bodyMesh = body;
         hatMesh = hat;
         accessoryMesh = accessory;
+        limitedMesh = limited;
       }
     }
 
-    function applyAvatarToMeshes(avatar, body, hat, accessory) {
-      if (!body || !hat || !accessory) return;
+    function applyAvatarToMeshes(avatar, body, hat, accessory, limited) {
+      if (!body || !hat || !accessory || !limited) return;
       body.material.color.set(avatar.bodyColor || '#9e9e9e');
 
       if (avatar.hat && avatar.hat !== 'none') {
@@ -1345,12 +1701,208 @@
       } else {
         accessory.visible = false;
       }
+
+      if (avatar.equippedLimitedId) {
+        const item = db.items[avatar.equippedLimitedId];
+        if (item) {
+          limited.visible = true;
+          limited.material.color.set('#ffd700');
+        } else {
+          limited.visible = false;
+        }
+      } else {
+        limited.visible = false;
+      }
     }
 
     function applyAvatarEverywhere(avatar) {
-      applyAvatarToMeshes(avatar, bodyMesh, hatMesh, accessoryMesh);
-      applyAvatarToMeshes(avatar, bodyMeshProfile, hatMeshProfile, accessoryMeshProfile);
+      applyAvatarToMeshes(avatar, bodyMesh, hatMesh, accessoryMesh, limitedMesh);
+      applyAvatarToMeshes(avatar, bodyMeshProfile, hatMeshProfile, accessoryMeshProfile, limitedMeshProfile);
     }
+
+    const userBrowserList = document.getElementById('userBrowserList');
+    const selectedUserInfo = document.getElementById('selectedUserInfo');
+    const selectedUserActions = document.getElementById('selectedUserActions');
+    const selectedUserInventory = document.getElementById('selectedUserInventory');
+    const followUserButton = document.getElementById('followUserButton');
+    const tradeUserButton = document.getElementById('tradeUserButton');
+
+    let selectedUserKey = null;
+
+    function renderUserBrowser() {
+      const current = getCurrentUser();
+      userBrowserList.innerHTML = '';
+      const users = Object.keys(db.users).sort();
+      users.forEach(uKey => {
+        const u = db.users[uKey];
+        const div = document.createElement('div');
+        div.className = 'user-browser-entry';
+        let label = uKey;
+        if (u.verified) label += ' ✓';
+        if (u.isAdmin) label += ' [admin]';
+        if (current && current.following && current.following.includes(uKey)) label += ' (following)';
+        div.textContent = label;
+        div.addEventListener('click', () => {
+          selectedUserKey = uKey;
+          showSelectedUser();
+        });
+        userBrowserList.appendChild(div);
+      });
+    }
+
+    function showSelectedUser() {
+      if (!selectedUserKey) {
+        selectedUserInfo.textContent = 'Select a user to view.';
+        selectedUserActions.style.display = 'none';
+        selectedUserInventory.innerHTML = '';
+        return;
+      }
+      const u = db.users[selectedUserKey];
+      if (!u) return;
+      let html = `<strong>${selectedUserKey}</strong>`;
+      if (u.verified) html += ' <span class="verified-badge">Verified</span>';
+      html += `<br>Followers: ${(u.followers || []).length} • Following: ${(u.following || []).length}`;
+      selectedUserInfo.innerHTML = html;
+      selectedUserActions.style.display = 'block';
+
+      selectedUserInventory.innerHTML = '';
+      const inv = u.inventory || [];
+      if (inv.length === 0) {
+        selectedUserInventory.innerHTML = '<span class="muted">No items.</span>';
+      } else {
+        inv.forEach(id => {
+          const item = db.items[id];
+          if (!item) return;
+          const line = document.createElement('div');
+          line.textContent = `${item.name} (${item.type === 'limited' ? 'Limited' : 'Clothing'})`;
+          selectedUserInventory.appendChild(line);
+        });
+      }
+    }
+
+    followUserButton.addEventListener('click', () => {
+      const current = getCurrentUser();
+      if (!current || !selectedUserKey) return;
+      if (selectedUserKey === db.currentUser) return;
+      const target = db.users[selectedUserKey];
+      current.following = current.following || [];
+      target.followers = target.followers || [];
+      if (!current.following.includes(selectedUserKey)) current.following.push(selectedUserKey);
+      if (!target.followers.includes(db.currentUser)) target.followers.push(db.currentUser);
+      saveData();
+      addNotification(selectedUserKey, `${db.currentUser} followed you.`);
+      renderProfile();
+      renderUserBrowser();
+      showSelectedUser();
+    });
+
+    tradeUserButton.addEventListener('click', () => {
+      if (!selectedUserKey) return;
+      showView('trades');
+      const tradeToUserInput = document.getElementById('tradeToUserInput');
+      tradeToUserInput.value = selectedUserKey;
+    });
+
+    const friendList = document.getElementById('friendList');
+    const chatBox = document.getElementById('chatBox');
+    const chatInput = document.getElementById('chatInput');
+    const chatSendButton = document.getElementById('chatSendButton');
+
+    let selectedFriendKey = null;
+
+    function renderFriends() {
+      const user = getCurrentUser();
+      friendList.innerHTML = '';
+      chatBox.innerHTML = '';
+      if (!user) {
+        friendList.innerHTML = '<p class="muted">Log in to see friends.</p>';
+        return;
+      }
+      user.friends = user.friends || [];
+      if (user.friends.length === 0) {
+        friendList.innerHTML = '<p class="muted">No friends yet. Mutual follows become friends.</p>';
+        return;
+      }
+      user.friends.forEach(fKey => {
+        const div = document.createElement('div');
+        div.className = 'friend-entry';
+        div.innerHTML = `<span>${fKey}</span>`;
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-small';
+        btn.textContent = 'Chat';
+        btn.addEventListener('click', () => {
+          selectedFriendKey = fKey;
+          renderChat();
+        });
+        div.appendChild(btn);
+        friendList.appendChild(div);
+      });
+    }
+
+    function ensureFriendsFromFollows() {
+      Object.keys(db.users).forEach(uKey => {
+        const u = db.users[uKey];
+        u.followers = u.followers || [];
+        u.following = u.following || [];
+        u.friends = u.friends || [];
+      });
+      Object.keys(db.users).forEach(uKey => {
+        const u = db.users[uKey];
+        u.following.forEach(other => {
+          const o = db.users[other];
+          if (!o) return;
+          if (o.following && o.following.includes(uKey)) {
+            if (!u.friends.includes(other)) u.friends.push(other);
+            if (!o.friends.includes(uKey)) o.friends.push(uKey);
+          }
+        });
+      });
+      saveData();
+    }
+
+    function renderChat() {
+      const user = getCurrentUser();
+      chatBox.innerHTML = '';
+      if (!user || !selectedFriendKey) {
+        chatBox.innerHTML = '<div class="muted">Select a friend to chat.</div>';
+        return;
+      }
+      user.messages = user.messages || [];
+      const lines = user.messages.filter(m => m.with === selectedFriendKey);
+      if (lines.length === 0) {
+        chatBox.innerHTML = '<div class="muted">No messages yet.</div>';
+        return;
+      }
+      lines.forEach(m => {
+        const div = document.createElement('div');
+        div.className = 'chat-line';
+        div.innerHTML = `<span>${m.from}:</span> ${m.text}`;
+        chatBox.appendChild(div);
+      });
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    chatSendButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !selectedFriendKey) return;
+      const text = chatInput.value.trim();
+      if (!text) return;
+      const target = db.users[selectedFriendKey];
+      if (!target) return;
+
+      user.messages = user.messages || [];
+      target.messages = target.messages || [];
+
+      user.messages.push({ with: selectedFriendKey, from: db.currentUser, text });
+      target.messages.push({ with: db.currentUser, from: db.currentUser, text });
+
+      addNotification(selectedFriendKey, `${db.currentUser} sent you a message.`);
+      saveData();
+      chatInput.value = '';
+      renderChat();
+    });
+
+    const profileVerified = document.getElementById('profileVerified');
 
     function renderProfile() {
       const user = getCurrentUser();
@@ -1360,12 +1912,16 @@
         profileItemCount.textContent = '0';
         profileCurrency.textContent = '0';
         profileVerified.innerHTML = '';
+        profileFollowers.textContent = '0';
+        profileFollowing.textContent = '0';
         inventoryList.innerHTML = '<p class="muted">Log in to see and own items.</p>';
         avatarMessage.textContent = 'You are not logged in.';
         avatarMessage.className = 'error';
         avatarGuestNote.textContent = 'Guests cannot save avatar changes.';
         equippedLimitedInput.innerHTML = '<option value="">None</option>';
-        applyAvatarEverywhere({ bodyColor: '#9e9e9e', hat: 'none', accessory: 'none' });
+        applyAvatarEverywhere({ bodyColor: '#9e9e9e', hat: 'none', accessory: 'none', equippedLimitedId: null });
+        renderUserBrowser();
+        renderFriends();
         return;
       }
 
@@ -1380,6 +1936,8 @@
       profileNetWorth.textContent = netWorth;
       profileItemCount.textContent = user.inventory.length;
       profileCurrency.textContent = user.currency || 0;
+      profileFollowers.textContent = (user.followers || []).length;
+      profileFollowing.textContent = (user.following || []).length;
 
       bodyColorInput.value = user.avatar.bodyColor || '#9e9e9e';
       hatInput.value = user.avatar.hat || 'none';
@@ -1424,6 +1982,11 @@
       avatarMessage.textContent = '';
       avatarMessage.className = '';
       avatarGuestNote.textContent = '';
+
+      ensureFriendsFromFollows();
+      renderUserBrowser();
+      renderFriends();
+      renderChat();
     }
 
     saveAvatarButton.addEventListener('click', () => {
@@ -1451,11 +2014,18 @@
     });
 
     const tradeToUserInput = document.getElementById('tradeToUserInput');
-    const tradeOfferItemInput = document.getElementById('tradeOfferItemInput');
-    const tradeRequestItemInput = document.getElementById('tradeRequestItemInput');
+    const tradeOfferAddInput = document.getElementById('tradeOfferAddInput');
+    const tradeRequestAddInput = document.getElementById('tradeRequestAddInput');
+    const tradeOfferAddButton = document.getElementById('tradeOfferAddButton');
+    const tradeRequestAddButton = document.getElementById('tradeRequestAddButton');
+    const tradeOfferItems = document.getElementById('tradeOfferItems');
+    const tradeRequestItems = document.getElementById('tradeRequestItems');
     const createTradeButton = document.getElementById('createTradeButton');
     const tradeMessage = document.getElementById('tradeMessage');
     const tradeList = document.getElementById('tradeList');
+
+    let currentOfferIds = [];
+    let currentRequestIds = [];
 
     function renderTrades() {
       const user = getCurrentUser();
@@ -1476,11 +2046,17 @@
         tradeToUserInput.appendChild(opt);
       });
 
-      tradeOfferItemInput.innerHTML = '';
+      tradeOfferAddInput.innerHTML = '';
       const offerPlaceholder = document.createElement('option');
       offerPlaceholder.value = '';
       offerPlaceholder.textContent = 'Select your limited';
-      tradeOfferItemInput.appendChild(offerPlaceholder);
+      tradeOfferAddInput.appendChild(offerPlaceholder);
+
+      tradeRequestAddInput.innerHTML = '';
+      const reqPlaceholder = document.createElement('option');
+      reqPlaceholder.value = '';
+      reqPlaceholder.textContent = 'Select requested limited';
+      tradeRequestAddInput.appendChild(reqPlaceholder);
 
       if (user) {
         user.inventory.forEach(id => {
@@ -1489,23 +2065,19 @@
           const opt = document.createElement('option');
           opt.value = id;
           opt.textContent = `${item.name} (Value ${item.value})`;
-          tradeOfferItemInput.appendChild(opt);
+          tradeOfferAddInput.appendChild(opt);
         });
       }
-
-      tradeRequestItemInput.innerHTML = '';
-      const reqPlaceholder = document.createElement('option');
-      reqPlaceholder.value = '';
-      reqPlaceholder.textContent = 'Select requested limited';
-      tradeRequestItemInput.appendChild(reqPlaceholder);
 
       Object.values(db.items).forEach(item => {
         if (!item.value) return;
         const opt = document.createElement('option');
         opt.value = item.id;
         opt.textContent = `${item.name} (Value ${item.value})`;
-        tradeRequestItemInput.appendChild(opt);
+        tradeRequestAddInput.appendChild(opt);
       });
+
+      renderTradeWindowLists();
 
       tradeList.innerHTML = '';
       if (!user) {
@@ -1520,19 +2092,21 @@
       }
 
       myTrades.forEach((t, index) => {
-        const offerItem = db.items[t.offerItemId];
-        const requestItem = db.items[t.requestItemId];
         const div = document.createElement('div');
         div.className = 'trade-entry';
         const statusText = t.status || 'pending';
         const youAreReceiver = t.to === db.currentUser;
-        const offerVal = offerItem && offerItem.value ? offerItem.value : 0;
-        const reqVal = requestItem && requestItem.value ? requestItem.value : 0;
+
+        const offerNames = t.offerItemIds.map(id => db.items[id]?.name || 'Unknown').join(', ');
+        const requestNames = t.requestItemIds.map(id => db.items[id]?.name || 'Unknown').join(', ');
+
+        const offerVal = t.offerItemIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+        const reqVal = t.requestItemIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
 
         div.innerHTML = `
           <div><strong>${t.from}</strong> → <strong>${t.to}</strong> (${statusText})</div>
-          <div>Offers: ${offerItem ? offerItem.name : 'Unknown'} (Value ${offerVal})</div>
-          <div>Requests: ${requestItem ? requestItem.name : 'Unknown'} (Value ${reqVal})</div>
+          <div>Offers: ${offerNames || 'None'} (Total Value ${offerVal})</div>
+          <div>Requests: ${requestNames || 'None'} (Total Value ${reqVal})</div>
           <div class="muted">${new Date(t.createdAt).toLocaleString()}</div>
         `;
 
@@ -1549,22 +2123,25 @@
               alert('You are banned or not logged in.');
               return;
             }
-            if (!offerItem || !requestItem) return;
             const fromUser = db.users[t.from];
             const toUser = db.users[t.to];
             if (!fromUser || !toUser) return;
 
-            fromUser.inventory = fromUser.inventory.filter(id => id !== t.offerItemId);
-            toUser.inventory = toUser.inventory.filter(id => id !== t.requestItemId);
+            t.offerItemIds.forEach(id => {
+              fromUser.inventory = fromUser.inventory.filter(x => x !== id);
+              toUser.inventory.push(id);
+              if (db.items[id]) db.items[id].owner = t.to;
+            });
 
-            fromUser.inventory.push(t.requestItemId);
-            toUser.inventory.push(t.offerItemId);
-
-            offerItem.owner = t.to;
-            requestItem.owner = t.from;
+            t.requestItemIds.forEach(id => {
+              toUser.inventory = toUser.inventory.filter(x => x !== id);
+              fromUser.inventory.push(id);
+              if (db.items[id]) db.items[id].owner = t.from;
+            });
 
             t.status = 'accepted';
             saveData();
+            addNotification(t.from, `${t.to} accepted your trade.`);
             renderTrades();
             renderProfile();
             renderHomeSummary();
@@ -1577,6 +2154,7 @@
           declineBtn.addEventListener('click', () => {
             t.status = 'declined';
             saveData();
+            addNotification(t.from, `${t.to} declined your trade.`);
             renderTrades();
           });
 
@@ -1590,29 +2168,11 @@
               alert('You are banned or not logged in.');
               return;
             }
-            const newOfferId = prompt('Enter ID of your limited to offer as counter (must be in your inventory):');
-            const parsed = parseInt(newOfferId, 10);
-            if (isNaN(parsed)) return;
-            if (!user.inventory.includes(parsed)) {
-              alert('You do not own that item.');
-              return;
-            }
-            const newItem = db.items[parsed];
-            if (!newItem || !newItem.value) {
-              alert('That item is not a limited with value.');
-              return;
-            }
-            db.trades.push({
-              from: db.currentUser,
-              to: t.from,
-              offerItemId: parsed,
-              requestItemId: t.offerItemId,
-              createdAt: Date.now(),
-              status: 'pending'
-            });
-            t.status = 'countered';
-            saveData();
-            renderTrades();
+            currentOfferIds = [...t.requestItemIds];
+            currentRequestIds = [...t.offerItemIds];
+            showView('trades');
+            tradeToUserInput.value = t.from;
+            renderTradeWindowLists();
           });
 
           actions.appendChild(acceptBtn);
@@ -1624,6 +2184,67 @@
         tradeList.appendChild(div);
       });
     }
+
+    function renderTradeWindowLists() {
+      tradeOfferItems.innerHTML = '';
+      tradeRequestItems.innerHTML = '';
+
+      currentOfferIds.forEach(id => {
+        const item = db.items[id];
+        if (!item) return;
+        const div = document.createElement('div');
+        div.className = 'trade-window-item';
+        div.innerHTML = `<span>${item.name}</span><button class="btn btn-small">X</button>`;
+        div.querySelector('button').addEventListener('click', () => {
+          currentOfferIds = currentOfferIds.filter(x => x !== id);
+          renderTradeWindowLists();
+        });
+        tradeOfferItems.appendChild(div);
+      });
+
+      currentRequestIds.forEach(id => {
+        const item = db.items[id];
+        if (!item) return;
+        const div = document.createElement('div');
+        div.className = 'trade-window-item';
+        div.innerHTML = `<span>${item.name}</span><button class="btn btn-small">X</button>`;
+        div.querySelector('button').addEventListener('click', () => {
+          currentRequestIds = currentRequestIds.filter(x => x !== id);
+          renderTradeWindowLists();
+        });
+        tradeRequestItems.appendChild(div);
+      });
+    }
+
+    tradeOfferAddButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) return;
+      const id = parseInt(tradeOfferAddInput.value, 10);
+      if (isNaN(id)) return;
+      if (!user.inventory.includes(id)) {
+        alert('You do not own that item.');
+        return;
+      }
+      const item = db.items[id];
+      if (!item || !item.value) {
+        alert('Item must be a limited with value.');
+        return;
+      }
+      if (!currentOfferIds.includes(id)) currentOfferIds.push(id);
+      renderTradeWindowLists();
+    });
+
+    tradeRequestAddButton.addEventListener('click', () => {
+      const id = parseInt(tradeRequestAddInput.value, 10);
+      if (isNaN(id)) return;
+      const item = db.items[id];
+      if (!item || !item.value) {
+        alert('Item must be a limited with value.');
+        return;
+      }
+      if (!currentRequestIds.includes(id)) currentRequestIds.push(id);
+      renderTradeWindowLists();
+    });
 
     createTradeButton.addEventListener('click', () => {
       const user = getCurrentUser();
@@ -1639,37 +2260,40 @@
       }
 
       const toUser = tradeToUserInput.value;
-      const offerId = parseInt(tradeOfferItemInput.value, 10);
-      const requestId = parseInt(tradeRequestItemInput.value, 10);
-
       if (!toUser) {
         tradeMessage.textContent = 'Select a user to trade with.';
         tradeMessage.className = 'error';
         return;
       }
-      if (isNaN(offerId) || isNaN(requestId)) {
-        tradeMessage.textContent = 'Select both offer and request items.';
+      if (currentOfferIds.length === 0 && currentRequestIds.length === 0) {
+        tradeMessage.textContent = 'Add at least one item to offer or request.';
         tradeMessage.className = 'error';
         return;
       }
 
-      if (!user.inventory.includes(offerId)) {
-        tradeMessage.textContent = 'You do not own that offer item.';
-        tradeMessage.className = 'error';
-        return;
+      for (const id of currentOfferIds) {
+        if (!user.inventory.includes(id)) {
+          tradeMessage.textContent = 'You do not own one of the offer items.';
+          tradeMessage.className = 'error';
+          return;
+        }
       }
 
       db.trades.push({
         from: db.currentUser,
         to: toUser,
-        offerItemId: offerId,
-        requestItemId: requestId,
+        offerItemIds: [...currentOfferIds],
+        requestItemIds: [...currentRequestIds],
         createdAt: Date.now(),
         status: 'pending'
       });
       saveData();
-      tradeMessage.textContent = 'Trade created.';
+      addNotification(toUser, `${db.currentUser} sent you a trade.`);
+      tradeMessage.textContent = 'Trade sent.';
       tradeMessage.className = 'success';
+      currentOfferIds = [];
+      currentRequestIds = [];
+      renderTradeWindowLists();
       renderTrades();
       renderStats();
     });
@@ -1795,7 +2419,8 @@
         price,
         type: 'limited',
         owner: null,
-        creator: ADMIN_USERNAME.toLowerCase()
+        creator: ADMIN_USERNAME.toLowerCase(),
+        advertised: false
       };
       saveData();
       adminMessage.textContent = 'Limited created with ID ' + id;
@@ -1805,6 +2430,56 @@
       adminItemPriceInput.value = '';
       renderCatalog();
       renderStats();
+    });
+
+    const notifBell = document.getElementById('notifBell');
+    const notifPanel = document.getElementById('notifPanel');
+    const notifList = document.getElementById('notifList');
+    const notifCount = document.getElementById('notifCount');
+    const notifClearButton = document.getElementById('notifClearButton');
+
+    function addNotification(usernameKey, text) {
+      const u = db.users[usernameKey];
+      if (!u) return;
+      u.notifications = u.notifications || [];
+      u.notifications.push({ text, time: Date.now() });
+      saveData();
+      renderNotifications();
+    }
+
+    function renderNotifications() {
+      const user = getCurrentUser();
+      notifList.innerHTML = '';
+      if (!user) {
+        notifCount.style.display = 'none';
+        return;
+      }
+      user.notifications = user.notifications || [];
+      if (user.notifications.length === 0) {
+        notifList.innerHTML = '<div class="muted">No notifications.</div>';
+        notifCount.style.display = 'none';
+        return;
+      }
+      user.notifications.slice().reverse().forEach(n => {
+        const div = document.createElement('div');
+        div.className = 'notif-item';
+        div.innerHTML = `<div>${n.text}</div><div class="muted">${new Date(n.time).toLocaleString()}</div>`;
+        notifList.appendChild(div);
+      });
+      notifCount.textContent = user.notifications.length;
+      notifCount.style.display = 'inline-block';
+    }
+
+    notifBell.addEventListener('click', () => {
+      notifPanel.style.display = notifPanel.style.display === 'none' ? 'block' : 'none';
+    });
+
+    notifClearButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user) return;
+      user.notifications = [];
+      saveData();
+      renderNotifications();
     });
 
     function init() {
@@ -1818,9 +2493,11 @@
       renderHomeSummary();
       updateGuestLocks();
       updateAdminNavVisibility();
+      renderNotifications();
     }
 
     window.addEventListener('load', init);
   </script>
 </body>
 </html>
+
