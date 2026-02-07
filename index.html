@@ -154,6 +154,16 @@
       filter: brightness(0.9);
     }
 
+    .verified-badge {
+      display: inline-block;
+      background: #1d4ed8;
+      color: #fff;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 999px;
+      margin-left: 4px;
+    }
+
     .container {
       max-width: 1200px;
       margin: 20px auto 40px;
@@ -422,6 +432,12 @@
       gap: 4px;
       flex-wrap: wrap;
     }
+
+    .admin-only {
+      color: #ef4444;
+      font-size: 12px;
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
@@ -436,6 +452,7 @@
         <a data-view="profile">Profile</a>
         <a data-view="trades">Trades</a>
         <a data-view="settings">Settings</a>
+        <a data-view="admin" id="adminNavLink" style="display:none;">Admin</a>
       </div>
     </div>
     <div class="top-center">
@@ -525,7 +542,8 @@
             • You cannot set item value yourself.<br>
             • Limiteds have value and can be traded.<br>
             • Clothing has price only and is not limited.<br>
-            • Buying costs RES Bux.
+            • Buying costs RES Bux.<br>
+            • Clothing sales give 70% to creator, 30% to Roblox (tax).
           </p>
         </div>
       </div>
@@ -538,7 +556,10 @@
       <div class="column-main">
         <div class="panel">
           <h2>Create Clothing</h2>
-          <p class="muted">Create simple clothing items for others (and you) to buy. No value, no limited flags—just price.</p>
+          <p class="muted">
+            Create simple clothing items for others (and you) to buy.<br>
+            There is a <strong>30% tax</strong> on sales that goes to Roblox (admin). You receive 70% of the price.
+          </p>
           <label class="label">Clothing Name</label>
           <input id="createNameInput" class="input" placeholder="RES Classic Tee">
           <label class="label">Price (RES Bux)</label>
@@ -557,7 +578,7 @@
       <div class="column-left">
         <div class="panel">
           <h2>Profile</h2>
-          <p><strong>Username:</strong> <span id="profileUsername">Guest</span></p>
+          <p><strong>Username:</strong> <span id="profileUsername">Guest</span> <span id="profileVerified"></span></p>
           <p><strong>RES Bux:</strong> <span id="profileCurrency">0</span></p>
           <p><strong>Net Worth:</strong> <span id="profileNetWorth">0</span></p>
           <p><strong>Owned Items:</strong> <span id="profileItemCount">0</span></p>
@@ -671,6 +692,48 @@
     </div>
   </div>
 
+  <!-- ADMIN -->
+  <div id="adminView" class="view">
+    <div class="container">
+      <div class="column-main">
+        <div class="panel">
+          <h2>Admin Panel</h2>
+          <p class="muted">Only visible to the admin account: <strong>roblox owner admin</strong>.</p>
+          <div id="adminWarning" class="admin-only"></div>
+
+          <h3>User Management</h3>
+          <label class="label">Select User</label>
+          <select id="adminUserSelect" class="select"></select>
+
+          <label class="label">Set RES Bux</label>
+          <input id="adminCurrencyInput" class="input" type="number" placeholder="1000">
+          <button class="btn btn-small" id="adminSetCurrencyButton">Set Currency</button>
+
+          <div style="margin-top:8px;">
+            <button class="btn btn-small" id="adminBanButton" style="background:#ef4444;">Ban User</button>
+            <button class="btn btn-small" id="adminUnbanButton" style="background:#10b981;">Unban User</button>
+          </div>
+
+          <h3 style="margin-top:16px;">Create Limited</h3>
+          <label class="label">Item Name</label>
+          <input id="adminItemNameInput" class="input" placeholder="Official RES Limited">
+          <label class="label">Rarity</label>
+          <select id="adminItemRarityInput" class="select">
+            <option value="rare">Rare</option>
+            <option value="epic">Epic</option>
+            <option value="legendary">Legendary</option>
+          </select>
+          <label class="label">Value</label>
+          <input id="adminItemValueInput" class="input" type="number" placeholder="5000">
+          <label class="label">Price (RES Bux)</label>
+          <input id="adminItemPriceInput" class="input" type="number" placeholder="1000">
+          <button class="btn btn-small" id="adminCreateLimitedButton">Create Limited</button>
+          <div id="adminMessage"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- AUTH MODAL -->
   <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
     <div style="background:var(--bg-card); padding:18px; border-radius:6px; width:280px; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid var(--border-soft);">
@@ -692,7 +755,9 @@
   </div>
 
   <script>
-    const STORAGE_KEY = 'res_data_v2';
+    const STORAGE_KEY = 'res_data_v3';
+    const ADMIN_USERNAME = 'roblox owner admin';
+    const ADMIN_PASSWORD = 'admin';
 
     function loadData() {
       try {
@@ -729,6 +794,34 @@
 
     let db = loadData();
 
+    function ensureAdminAccount() {
+      const key = ADMIN_USERNAME.toLowerCase();
+      if (!db.users[key]) {
+        db.users[key] = {
+          password: ADMIN_PASSWORD,
+          avatar: {
+            bodyColor: '#9e9e9e',
+            hat: 'none',
+            accessory: 'none',
+            equippedLimitedId: null
+          },
+          inventory: [],
+          currency: 100000,
+          isAdmin: true,
+          verified: true,
+          banned: false
+        };
+        saveData();
+      } else {
+        db.users[key].isAdmin = true;
+        db.users[key].verified = true;
+        if (db.users[key].currency == null) db.users[key].currency = 100000;
+        if (db.users[key].banned == null) db.users[key].banned = false;
+        saveData();
+      }
+    }
+    ensureAdminAccount();
+
     function seedItemsIfEmpty() {
       if (Object.keys(db.items).length === 0) {
         const defaults = [
@@ -746,7 +839,8 @@
             value: item.value,
             price: item.price,
             type: item.type,
-            owner: null
+            owner: null,
+            creator: null
           };
         });
         saveData();
@@ -776,7 +870,8 @@
       create: document.getElementById('createView'),
       profile: document.getElementById('profileView'),
       trades: document.getElementById('tradesView'),
-      settings: document.getElementById('settingsView')
+      settings: document.getElementById('settingsView'),
+      admin: document.getElementById('adminView')
     };
 
     function showView(name) {
@@ -790,6 +885,7 @@
         renderStats();
         renderHomeSummary();
       }
+      if (name === 'admin') renderAdminPanel();
     }
 
     document.querySelectorAll('.nav-links a, button[data-view]').forEach(el => {
@@ -807,6 +903,7 @@
     const authCancelButton = document.getElementById('authCancelButton');
     const authMessage = document.getElementById('authMessage');
     const navUserLabel = document.getElementById('navUserLabel');
+    const adminNavLink = document.getElementById('adminNavLink');
 
     function openAuthModal() {
       authUsernameInput.value = '';
@@ -831,10 +928,10 @@
         authMessage.className = 'error';
         return;
       }
-      const username = usernameRaw.toLowerCase();
+      const usernameKey = usernameRaw.toLowerCase();
 
-      if (!db.users[username]) {
-        db.users[username] = {
+      if (!db.users[usernameKey]) {
+        db.users[usernameKey] = {
           password: passwordRaw,
           avatar: {
             bodyColor: '#9e9e9e',
@@ -843,30 +940,57 @@
             equippedLimitedId: null
           },
           inventory: [],
-          currency: 1000
+          currency: 1000,
+          isAdmin: false,
+          verified: false,
+          banned: false
         };
-        authMessage.textContent = 'Account created. Logged in as ' + username;
+        authMessage.textContent = 'Account created. Logged in as ' + usernameRaw;
         authMessage.className = 'success';
       } else {
-        if (db.users[username].password !== passwordRaw) {
+        const user = db.users[usernameKey];
+        if (user.password !== passwordRaw) {
           authMessage.textContent = 'Incorrect password.';
           authMessage.className = 'error';
           return;
         }
-        authMessage.textContent = 'Logged in as ' + username;
+        if (user.banned) {
+          authMessage.textContent = 'This account is banned.';
+          authMessage.className = 'error';
+          return;
+        }
+        authMessage.textContent = 'Logged in as ' + usernameRaw;
         authMessage.className = 'success';
       }
 
-      db.currentUser = username;
+      db.currentUser = usernameKey;
       saveData();
-      navUserLabel.textContent = username + ' (full access)';
+      updateNavUserLabel();
       setTimeout(closeAuthModal, 400);
       renderProfile();
       renderTrades();
       renderStats();
       renderHomeSummary();
       updateGuestLocks();
+      updateAdminNavVisibility();
     });
+
+    function updateNavUserLabel() {
+      const user = getCurrentUser();
+      if (!user) {
+        navUserLabel.textContent = 'Guest (view only)';
+        return;
+      }
+      let label = db.currentUser;
+      if (user.verified) label += ' ✓';
+      label += user.isAdmin ? ' (admin)' : ' (full access)';
+      navUserLabel.textContent = label;
+    }
+
+    function updateAdminNavVisibility() {
+      const user = getCurrentUser();
+      adminNavLink.style.display = user && user.isAdmin ? 'inline-block' : 'none';
+    }
 
     function updateGuestLocks() {
       const user = getCurrentUser();
@@ -884,11 +1008,7 @@
       document.getElementById('createTradeButton').classList.toggle('btn-disabled', isGuest);
       document.getElementById('tradesGuestNote').textContent = isGuest ? 'Guests cannot create trades. Sign up to trade items.' : '';
 
-      if (!user) {
-        navUserLabel.textContent = 'Guest (view only)';
-      } else {
-        navUserLabel.textContent = db.currentUser + ' (full access)';
-      }
+      updateNavUserLabel();
     }
 
     const statUsers = document.getElementById('statUsers');
@@ -987,8 +1107,10 @@
         const isLimited = item.type === 'limited';
         const badgeClass = isLimited ? rarityBadgeClass(item.rarity) : 'badge badge-clothing';
         const badgeText = isLimited ? item.rarity.toUpperCase() : 'CLOTHING';
-        const valueLine = isLimited ? `<div class="item-meta">Value: ${item.value}</div>` : '';
+        const valueLine = isLimited && item.value ? `<div class="item-meta">Value: ${item.value}</div>` : '';
         const ownerText = item.owner || 'None';
+        const creatorText = item.creator || 'None';
+
         const buyButton = document.createElement('button');
         buyButton.className = 'btn btn-small';
         buyButton.textContent = 'Buy for ' + item.price + ' RES';
@@ -997,15 +1119,40 @@
 
         buyButton.addEventListener('click', () => {
           if (!user) return;
+          if (user.banned) {
+            alert('You are banned and cannot buy items.');
+            return;
+          }
           if (user.currency < item.price) {
             alert('Not enough RES Bux.');
             return;
           }
-          user.currency -= item.price;
+
+          if (item.type === 'clothing' && item.creator) {
+            const creatorKey = item.creator.toLowerCase();
+            const creator = db.users[creatorKey];
+            const adminKey = ADMIN_USERNAME.toLowerCase();
+            const adminUser = db.users[adminKey];
+
+            const tax = Math.floor(item.price * 0.3);
+            const payout = item.price - tax;
+
+            user.currency -= item.price;
+            if (creator) {
+              creator.currency = (creator.currency || 0) + payout;
+            }
+            if (adminUser) {
+              adminUser.currency = (adminUser.currency || 0) + tax;
+            }
+          } else {
+            user.currency -= item.price;
+          }
+
           if (!user.inventory.includes(item.id)) {
             user.inventory.push(item.id);
           }
           item.owner = db.currentUser;
+
           saveData();
           renderCatalog();
           renderProfile();
@@ -1020,6 +1167,7 @@
             <div class="item-meta">Price: ${item.price} RES</div>
             ${valueLine}
             <div class="item-meta">Owner: ${ownerText}</div>
+            <div class="item-meta">Creator: ${creatorText}</div>
             <span class="${badgeClass}">${badgeText}</span>
           </div>
         `;
@@ -1040,6 +1188,11 @@
         createMessage.className = 'error';
         return;
       }
+      if (user.banned) {
+        createMessage.textContent = 'You are banned and cannot create clothing.';
+        createMessage.className = 'error';
+        return;
+      }
       const name = createNameInput.value.trim();
       const price = parseInt(createPriceInput.value, 10);
       if (!name || isNaN(price) || price <= 0) {
@@ -1055,10 +1208,11 @@
         value: null,
         price,
         type: 'clothing',
-        owner: null
+        owner: null,
+        creator: db.currentUser
       };
       saveData();
-      createMessage.textContent = 'Clothing uploaded.';
+      createMessage.textContent = 'Clothing uploaded. 30% tax will be taken on each sale.';
       createMessage.className = 'success';
       createNameInput.value = '';
       createPriceInput.value = '';
@@ -1078,6 +1232,7 @@
     const profileNetWorth = document.getElementById('profileNetWorth');
     const profileItemCount = document.getElementById('profileItemCount');
     const profileCurrency = document.getElementById('profileCurrency');
+    const profileVerified = document.getElementById('profileVerified');
     const inventoryList = document.getElementById('inventoryList');
 
     const homeAvatarContainer = document.getElementById('homeAvatarContainer');
@@ -1204,6 +1359,7 @@
         profileNetWorth.textContent = '0';
         profileItemCount.textContent = '0';
         profileCurrency.textContent = '0';
+        profileVerified.innerHTML = '';
         inventoryList.innerHTML = '<p class="muted">Log in to see and own items.</p>';
         avatarMessage.textContent = 'You are not logged in.';
         avatarMessage.className = 'error';
@@ -1214,6 +1370,8 @@
       }
 
       profileUsername.textContent = db.currentUser;
+      profileVerified.innerHTML = user.verified ? '<span class="verified-badge">Verified</span>' : '';
+
       let netWorth = 0;
       user.inventory.forEach(id => {
         const item = db.items[id];
@@ -1275,6 +1433,11 @@
         avatarMessage.className = 'error';
         return;
       }
+      if (user.banned) {
+        avatarMessage.textContent = 'You are banned and cannot change avatar.';
+        avatarMessage.className = 'error';
+        return;
+      }
       user.avatar.bodyColor = bodyColorInput.value;
       user.avatar.hat = hatInput.value;
       user.avatar.accessory = accessoryInput.value;
@@ -1305,6 +1468,8 @@
 
       Object.keys(db.users).forEach(username => {
         if (db.currentUser && username === db.currentUser) return;
+        const u = db.users[username];
+        if (u.banned) return;
         const opt = document.createElement('option');
         opt.value = username;
         opt.textContent = username;
@@ -1379,6 +1544,11 @@
           acceptBtn.className = 'btn btn-small';
           acceptBtn.textContent = 'Accept';
           acceptBtn.addEventListener('click', () => {
+            const user = getCurrentUser();
+            if (!user || user.banned) {
+              alert('You are banned or not logged in.');
+              return;
+            }
             if (!offerItem || !requestItem) return;
             const fromUser = db.users[t.from];
             const toUser = db.users[t.to];
@@ -1416,7 +1586,10 @@
           counterBtn.textContent = 'Counter';
           counterBtn.addEventListener('click', () => {
             const user = getCurrentUser();
-            if (!user) return;
+            if (!user || user.banned) {
+              alert('You are banned or not logged in.');
+              return;
+            }
             const newOfferId = prompt('Enter ID of your limited to offer as counter (must be in your inventory):');
             const parsed = parseInt(newOfferId, 10);
             if (isNaN(parsed)) return;
@@ -1459,6 +1632,11 @@
         tradeMessage.className = 'error';
         return;
       }
+      if (user.banned) {
+        tradeMessage.textContent = 'You are banned and cannot trade.';
+        tradeMessage.className = 'error';
+        return;
+      }
 
       const toUser = tradeToUserInput.value;
       const offerId = parseInt(tradeOfferItemInput.value, 10);
@@ -1496,6 +1674,139 @@
       renderStats();
     });
 
+    const adminUserSelect = document.getElementById('adminUserSelect');
+    const adminCurrencyInput = document.getElementById('adminCurrencyInput');
+    const adminSetCurrencyButton = document.getElementById('adminSetCurrencyButton');
+    const adminBanButton = document.getElementById('adminBanButton');
+    const adminUnbanButton = document.getElementById('adminUnbanButton');
+    const adminItemNameInput = document.getElementById('adminItemNameInput');
+    const adminItemRarityInput = document.getElementById('adminItemRarityInput');
+    const adminItemValueInput = document.getElementById('adminItemValueInput');
+    const adminItemPriceInput = document.getElementById('adminItemPriceInput');
+    const adminCreateLimitedButton = document.getElementById('adminCreateLimitedButton');
+    const adminMessage = document.getElementById('adminMessage');
+    const adminWarning = document.getElementById('adminWarning');
+
+    function renderAdminPanel() {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) {
+        adminWarning.textContent = 'You are not an admin. Log in as "roblox owner admin" to use this panel.';
+        adminUserSelect.innerHTML = '';
+        return;
+      }
+      adminWarning.textContent = '';
+
+      adminUserSelect.innerHTML = '';
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select user';
+      adminUserSelect.appendChild(placeholder);
+
+      Object.keys(db.users).forEach(username => {
+        const opt = document.createElement('option');
+        opt.value = username;
+        const u = db.users[username];
+        let label = username;
+        if (u.banned) label += ' (banned)';
+        if (u.isAdmin) label += ' [admin]';
+        opt.textContent = label;
+        adminUserSelect.appendChild(opt);
+      });
+    }
+
+    adminSetCurrencyButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) return;
+      const target = adminUserSelect.value;
+      if (!target) {
+        adminMessage.textContent = 'Select a user.';
+        adminMessage.className = 'error';
+        return;
+      }
+      const amount = parseInt(adminCurrencyInput.value, 10);
+      if (isNaN(amount)) {
+        adminMessage.textContent = 'Enter a valid amount.';
+        adminMessage.className = 'error';
+        return;
+      }
+      db.users[target].currency = amount;
+      saveData();
+      adminMessage.textContent = 'Currency updated for ' + target;
+      adminMessage.className = 'success';
+      renderProfile();
+      renderHomeSummary();
+    });
+
+    adminBanButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) return;
+      const target = adminUserSelect.value;
+      if (!target) {
+        adminMessage.textContent = 'Select a user.';
+        adminMessage.className = 'error';
+        return;
+      }
+      if (target === db.currentUser) {
+        adminMessage.textContent = 'You cannot ban yourself.';
+        adminMessage.className = 'error';
+        return;
+      }
+      db.users[target].banned = true;
+      saveData();
+      adminMessage.textContent = 'User banned: ' + target;
+      adminMessage.className = 'success';
+      renderAdminPanel();
+    });
+
+    adminUnbanButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) return;
+      const target = adminUserSelect.value;
+      if (!target) {
+        adminMessage.textContent = 'Select a user.';
+        adminMessage.className = 'error';
+        return;
+      }
+      db.users[target].banned = false;
+      saveData();
+      adminMessage.textContent = 'User unbanned: ' + target;
+      adminMessage.className = 'success';
+      renderAdminPanel();
+    });
+
+    adminCreateLimitedButton.addEventListener('click', () => {
+      const user = getCurrentUser();
+      if (!user || !user.isAdmin) return;
+      const name = adminItemNameInput.value.trim();
+      const rarity = adminItemRarityInput.value;
+      const value = parseInt(adminItemValueInput.value, 10);
+      const price = parseInt(adminItemPriceInput.value, 10);
+      if (!name || isNaN(value) || value <= 0 || isNaN(price) || price <= 0) {
+        adminMessage.textContent = 'Enter valid name, value, and price.';
+        adminMessage.className = 'error';
+        return;
+      }
+      const id = db.nextItemId++;
+      db.items[id] = {
+        id,
+        name,
+        rarity,
+        value,
+        price,
+        type: 'limited',
+        owner: null,
+        creator: ADMIN_USERNAME.toLowerCase()
+      };
+      saveData();
+      adminMessage.textContent = 'Limited created with ID ' + id;
+      adminMessage.className = 'success';
+      adminItemNameInput.value = '';
+      adminItemValueInput.value = '';
+      adminItemPriceInput.value = '';
+      renderCatalog();
+      renderStats();
+    });
+
     function init() {
       applyTheme();
       initAvatar3D(homeAvatarContainer, false);
@@ -1506,6 +1817,7 @@
       renderTrades();
       renderHomeSummary();
       updateGuestLocks();
+      updateAdminNavVisibility();
     }
 
     window.addEventListener('load', init);
