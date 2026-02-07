@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>RES – Roblox Economy Revival</title>
 
-  <!-- Three.js as ES module -->
+  <!-- Three.js as ES module (kept for future 3D avatar use) -->
   <script type="module">
     import * as THREE from "https://unpkg.com/three@0.160.0/build/three.module.js";
     window.THREE = THREE;
@@ -26,6 +26,9 @@
       --nav-text: #111827;
       --search-bg: #e5e7eb;
       --notif-bg: #f97316;
+      --danger: #ef4444;
+      --success: #22c55e;
+      --warning: #facc15;
     }
     body.dark {
       --bg: #111827;
@@ -43,6 +46,11 @@
       --search-bg: #1f2933;
       --notif-bg: #f97316;
     }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
       margin: 0;
       font-family: "Roboto", "Arial", sans-serif;
@@ -50,6 +58,7 @@
       color: var(--text-main);
       transition: background 0.2s, color 0.2s;
     }
+
     .top-bar {
       background: var(--nav-bg);
       border-bottom: 1px solid var(--nav-border);
@@ -61,11 +70,13 @@
       top: 0;
       z-index: 10;
     }
+
     .top-left {
       display: flex;
       align-items: center;
       gap: 16px;
     }
+
     .logo-box {
       width: 32px;
       height: 32px;
@@ -79,18 +90,21 @@
       font-size: 18px;
       margin-right: 4px;
     }
+
     .logo-text {
       font-size: 20px;
       font-weight: 900;
       color: var(--nav-text);
       letter-spacing: 0.5px;
     }
+
     .nav-links {
       display: flex;
       align-items: center;
       gap: 10px;
       margin-left: 10px;
     }
+
     .nav-links a {
       color: var(--nav-text);
       text-decoration: none;
@@ -100,15 +114,18 @@
       padding: 4px 6px;
       border-radius: 4px;
     }
+
     .nav-links a:hover {
       background: var(--bg-card-soft);
       color: var(--accent);
     }
+
     .top-center {
       flex: 1;
       display: flex;
       justify-content: center;
     }
+
     .search-box {
       display: flex;
       align-items: center;
@@ -119,6 +136,7 @@
       max-width: 360px;
       width: 100%;
     }
+
     .search-box input {
       border: none;
       background: transparent;
@@ -127,21 +145,25 @@
       font-size: 13px;
       color: var(--text-main);
     }
+
     .search-icon {
       font-size: 14px;
       color: var(--text-muted);
       margin-right: 6px;
     }
+
     .top-right {
       display: flex;
       align-items: center;
       gap: 10px;
       font-size: 13px;
     }
+
     .nav-username {
       font-weight: 500;
       color: var(--text-main);
     }
+
     .nav-btn {
       background: var(--accent);
       color: #fff;
@@ -151,18 +173,22 @@
       cursor: pointer;
       font-size: 13px;
     }
+
     .nav-btn:hover {
       filter: brightness(0.9);
     }
+
     .notif-bell {
       position: relative;
       cursor: pointer;
       padding: 4px 6px;
       border-radius: 4px;
     }
+
     .notif-bell:hover {
       background: var(--bg-card-soft);
     }
+
     .notif-count {
       position: absolute;
       top: -4px;
@@ -174,6 +200,7 @@
       font-size: 10px;
       font-weight: 700;
     }
+
     .verified-badge {
       display: inline-flex;
       align-items: center;
@@ -186,11 +213,13 @@
       margin-left: 4px;
       border: 1px solid #93c5fd;
     }
+
     .verified-badge::before {
       content: "✔";
       font-size: 9px;
       margin-right: 2px;
     }
+
     .container {
       max-width: 1200px;
       margin: 16px auto 40px;
@@ -198,17 +227,21 @@
       gap: 16px;
       padding: 0 12px;
     }
+
     .column-left {
       width: 260px;
       flex-shrink: 0;
     }
+
     .column-main {
       flex: 1;
     }
+
     .column-right {
       width: 260px;
       flex-shrink: 0;
     }
+
     .panel {
       background: var(--bg-card);
       border-radius: 6px;
@@ -217,6 +250,7 @@
       margin-bottom: 14px;
       border: 1px solid var(--border-soft);
     }
+
     .panel h2 {
       margin: 0 0 10px 0;
       font-size: 18px;
@@ -224,11 +258,13 @@
       border-bottom: 1px solid var(--border-soft);
       padding-bottom: 6px;
     }
+
     .panel h3 {
       margin: 8px 0 6px 0;
       font-size: 15px;
       color: var(--text-main);
     }
+
     .btn {
       display: inline-block;
       background: var(--accent);
@@ -237,2180 +273,1667 @@
       font-size: 13px;
       text-decoration: none;
       border-radius: 4px;
-      font-weight: 500;
       border: none;
       cursor: pointer;
     }
-    .btn:hover {
-      filter: brightness(0.9);
-    }
-    .btn-small {
+
+    .btn.small {
       padding: 4px 8px;
-      font-size: 11px;
-    }
-    .btn-disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-    .input {
-      width: 100%;
-      padding: 7px;
-      margin: 4px 0 8px 0;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      font-size: 13px;
-      box-sizing: border-box;
-      background: var(--bg-card-soft);
-      color: var(--text-main);
-    }
-    .select {
-      width: 100%;
-      padding: 7px;
-      margin: 4px 0 8px 0;
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      font-size: 13px;
-      box-sizing: border-box;
-      background: var(--bg-card-soft);
-      color: var(--text-main);
-    }
-    .label {
       font-size: 12px;
-      font-weight: 500;
-      margin-top: 4px;
-      display: block;
     }
-    .footer {
-      text-align: center;
+
+    .btn.danger {
+      background: var(--danger);
+    }
+
+    .btn.secondary {
+      background: #6b7280;
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+
+    .label {
+      display: block;
       font-size: 12px;
       color: var(--text-muted);
-      padding: 20px 0 30px;
+      margin-bottom: 3px;
     }
+
+    .input, .select {
+      width: 100%;
+      padding: 6px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+      font-size: 13px;
+      background: var(--bg-card-soft);
+      color: var(--text-main);
+      outline: none;
+    }
+
+    .input:focus, .select:focus {
+      border-color: var(--accent);
+    }
+
     .muted {
       font-size: 12px;
       color: var(--text-muted);
     }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 999px;
+      font-size: 11px;
+      border: 1px solid var(--border-soft);
+      background: var(--bg-card-soft);
+      margin-right: 4px;
+    }
+
+    .pill.green {
+      border-color: #22c55e;
+      color: #16a34a;
+      background: #dcfce7;
+    }
+
+    .pill.red {
+      border-color: #ef4444;
+      color: #b91c1c;
+      background: #fee2e2;
+    }
+
+    .pill.yellow {
+      border-color: #facc15;
+      color: #ca8a04;
+      background: #fef9c3;
+    }
+
+    .error {
+      color: var(--danger);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    .success {
+      color: var(--success);
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
     .view {
       display: none;
     }
+
     .view.active {
       display: block;
     }
-    .error {
-      color: #ef4444;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    .success {
-      color: #22c55e;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    .section-title {
-      font-size: 15px;
-      font-weight: 600;
-      margin: 4px 0 8px;
-    }
-    .game-row {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 10px;
-    }
-    .game-card {
-      background: var(--bg-card-soft);
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      overflow: hidden;
-      font-size: 12px;
-    }
-    .game-thumb {
-      height: 80px;
-      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
-    }
-    .game-info {
-      padding: 6px 8px;
-    }
-    .game-name {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .game-meta {
-      color: var(--text-muted);
-      font-size: 11px;
-    }
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 10px;
-    }
-    .item-card {
-      background: var(--bg-card-soft);
-      border-radius: 6px;
-      padding: 8px;
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
+
+    .flex-row {
       display: flex;
-      gap: 8px;
+      gap: 10px;
     }
-    .item-thumb {
-      width: 48px;
-      height: 48px;
+
+    .flex-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .avatar-box {
+      width: 100%;
+      height: 180px;
       border-radius: 6px;
-      background: linear-gradient(135deg, var(--accent-soft), var(--accent));
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-weight: 700;
-      font-size: 16px;
-      flex-shrink: 0;
+      font-size: 32px;
     }
-    .item-content {
-      flex: 1;
+
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
     }
+
+    .item-card {
+      background: var(--bg-card-soft);
+      border-radius: 6px;
+      padding: 8px;
+      border: 1px solid var(--border-soft);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .item-thumb {
+      width: 100%;
+      height: 90px;
+      border-radius: 4px;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 4px;
+    }
+
     .item-name {
+      font-size: 13px;
       font-weight: 600;
-      margin-bottom: 2px;
     }
+
     .item-meta {
       font-size: 11px;
       color: var(--text-muted);
     }
-    .badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 10px;
+
+    .tag-limited {
       font-size: 10px;
-      margin-right: 4px;
-      margin-top: 4px;
+      padding: 1px 4px;
+      border-radius: 999px;
+      background: #f97316;
+      color: #fff;
+      margin-left: 4px;
     }
-    .badge-rare { background: #e3f2fd; color: #1d4ed8; }
-    .badge-epic { background: #f3e5f5; color: #7b1fa2; }
-    .badge-legendary { background: #fff3e0; color: #c05621; }
-    .badge-clothing { background: #e5f6ff; color: #0369a1; }
-    body.dark .badge-rare { background: #1d4ed8; color: #e5f2ff; }
-    body.dark .badge-epic { background: #4c1d95; color: #f5e9ff; }
-    body.dark .badge-legendary { background: #92400e; color: #ffedd5; }
-    body.dark .badge-clothing { background: #0c4a6e; color: #e0f2fe; }
-    .trade-list {
-      font-size: 12px;
-    }
-    .trade-entry {
-      border-bottom: 1px solid var(--border-soft);
-      padding: 6px 0;
-    }
-    .avatar-wrapper {
-      width: 100%;
-      height: 220px;
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      overflow: hidden;
-      background: #111827;
-    }
-    .toggle-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin: 8px 0;
-    }
-    .trade-actions {
-      margin-top: 4px;
-      display: flex;
-      gap: 4px;
-      flex-wrap: wrap;
-    }
-    .admin-only {
-      color: #ef4444;
-      font-size: 12px;
-      margin-top: 4px;
-    }
-    .ad-card {
-      background: var(--bg-card-soft);
-      border-radius: 4px;
-      border: 1px solid var(--border-soft);
-      padding: 6px 8px;
-      font-size: 11px;
-      margin-bottom: 6px;
-    }
-    .ad-title {
-      font-weight: 600;
-      margin-bottom: 2px;
-    }
-    .notif-panel {
-      position: absolute;
-      right: 10px;
-      top: 40px;
-      width: 260px;
-      background: var(--bg-card);
-      border-radius: 6px;
-      border: 1px solid var(--border-soft);
-      box-shadow: var(--shadow-soft);
-      padding: 8px 10px;
-      font-size: 12px;
-      z-index: 20;
-    }
-    .notif-item {
-      border-bottom: 1px solid var(--border-soft);
-      padding: 4px 0;
-    }
-    .notif-item:last-child {
-      border-bottom: none;
-    }
-    .friend-list {
-      font-size: 12px;
-      max-height: 180px;
-      overflow-y: auto;
-    }
-    .friend-entry {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 3px 0;
-      border-bottom: 1px solid var(--border-soft);
-    }
-    .friend-entry:last-child {
-      border-bottom: none;
-    }
-    .chat-box {
-      border: 1px solid var(--border-soft);
-      border-radius: 4px;
-      padding: 6px;
-      max-height: 180px;
-      overflow-y: auto;
-      background: var(--bg-card-soft);
-      font-size: 11px;
-      margin-bottom: 6px;
-    }
-    .chat-line {
-      margin-bottom: 3px;
-    }
-    .chat-line span {
-      font-weight: 600;
-    }
-    .trade-window {
+
+    .trade-columns {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-top: 8px;
+      gap: 10px;
     }
-    .trade-window-column {
+
+    .trade-column {
+      border-radius: 6px;
       border: 1px solid var(--border-soft);
-      border-radius: 4px;
-      padding: 6px;
+      padding: 8px;
       background: var(--bg-card-soft);
-      font-size: 11px;
     }
-    .trade-window-items {
-      max-height: 120px;
+
+    .trade-items-list {
+      max-height: 160px;
       overflow-y: auto;
-      margin-top: 4px;
+      border-radius: 4px;
+      border: 1px solid var(--border-soft);
+      padding: 4px;
+      background: var(--bg-card);
+      font-size: 12px;
     }
-    .trade-window-item {
+
+    .trade-item-row {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       padding: 2px 0;
-      border-bottom: 1px solid var(--border-soft);
+      border-bottom: 1px solid rgba(0,0,0,0.03);
     }
-    .trade-window-item:last-child {
+
+    .trade-item-row:last-child {
       border-bottom: none;
     }
-    .user-browser-list {
-      max-height: 180px;
+
+    .trade-bux-section {
+      margin-top: 6px;
+    }
+
+    .fairness-meter {
+      width: 100%;
+      height: 10px;
+      background: #ddd;
+      border-radius: 6px;
+      margin-top: 8px;
+      overflow: hidden;
+    }
+
+    .fairness-fill {
+      height: 100%;
+      width: 0%;
+      background: #4ade80;
+      transition: width 0.3s, background 0.3s;
+    }
+
+    .fairness-label {
+      margin-top: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .trade-summary {
+      margin-top: 8px;
+      font-size: 12px;
+    }
+
+    .trade-summary span {
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .trade-list-entry {
+      border-radius: 6px;
+      border: 1px solid var(--border-soft);
+      padding: 8px;
+      margin-bottom: 6px;
+      background: var(--bg-card-soft);
+      font-size: 12px;
+    }
+
+    .trade-list-entry-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .badge-incoming {
+      background: #e0f2fe;
+      color: #0369a1;
+      border-radius: 999px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .badge-outgoing {
+      background: #fef3c7;
+      color: #92400e;
+      border-radius: 999px;
+      padding: 1px 6px;
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .chat-box {
+      height: 200px;
+      border-radius: 6px;
+      border: 1px solid var(--border-soft);
+      padding: 6px;
+      background: var(--bg-card-soft);
       overflow-y: auto;
       font-size: 12px;
-      border: 1px solid var(--border-soft);
-      border-radius: 4px;
-      padding: 4px 6px;
-      background: var(--bg-card-soft);
     }
-    .user-browser-entry {
-      padding: 3px 0;
-      border-bottom: 1px solid var(--border-soft);
-      cursor: pointer;
+
+    .chat-input-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 6px;
     }
-    .user-browser-entry:last-child {
+
+    .notif-list {
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+
+    .notif-entry {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .notif-entry:last-child {
       border-bottom: none;
     }
-    .user-browser-entry:hover {
-      background: var(--bg-card);
+
+    .confirm-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
-    .mini-inventory {
-      max-height: 140px;
-      overflow-y: auto;
-      font-size: 11px;
-      border: 1px solid var(--border-soft);
-      border-radius: 4px;
-      padding: 4px 6px;
-      background: var(--bg-card-soft);
+
+    .hidden {
+      display: none !important;
     }
   </style>
 </head>
 <body>
-
   <div class="top-bar">
     <div class="top-left">
-      <div style="display:flex;align-items:center;">
-        <div class="logo-box">R</div>
-        <div class="logo-text">RES</div>
-      </div>
+      <div class="logo-box">R</div>
+      <div class="logo-text">RES</div>
       <div class="nav-links">
-        <a data-view="home">Home</a>
-        <a data-view="catalog">Catalog</a>
-        <a data-view="create">Create</a>
-        <a data-view="profile">Profile</a>
-        <a data-view="trades">Trades</a>
-        <a data-view="settings">Settings</a>
-        <a data-view="admin" id="adminNavLink" style="display:none;">Admin</a>
+        <a data-view="homeView">Home</a>
+        <a data-view="catalogView">Catalog</a>
+        <a data-view="createView">Create</a>
+        <a data-view="profileView">Profile</a>
+        <a data-view="tradeView">Trades</a>
+        <a data-view="adminView" id="adminNavLink" class="hidden">Admin</a>
       </div>
     </div>
     <div class="top-center">
       <div class="search-box">
         <span class="search-icon">🔍</span>
-        <input type="text" placeholder="Search (visual only)">
+        <input id="globalSearchInput" placeholder="Search users or items...">
       </div>
     </div>
     <div class="top-right">
-      <div class="notif-bell" id="notifBell">🔔<span class="notif-count" id="notifCount" style="display:none;">0</span></div>
-      <span class="nav-username" id="navUserLabel">Guest (view only)</span>
-      <button class="nav-btn" id="authButton">Sign Up / Login</button>
+      <span id="navUserLabel" class="nav-username">Guest</span>
+      <span id="navCurrencyLabel" class="muted">0 RES</span>
+      <div class="notif-bell" id="notifBell">
+        🔔
+        <span id="notifCount" class="notif-count hidden">0</span>
+      </div>
+      <button id="themeToggleBtn" class="nav-btn secondary">Theme</button>
+      <button id="authBtn" class="nav-btn">Login / Signup</button>
     </div>
   </div>
 
-  <div id="notifPanel" class="notif-panel" style="display:none;">
-    <div style="font-weight:600;margin-bottom:4px;">Notifications</div>
-    <div id="notifList"></div>
-    <button class="btn btn-small" id="notifClearButton" style="margin-top:4px;">Clear</button>
-  </div>
-
-  <!-- HOME -->
-  <div id="homeView" class="view active">
-    <div class="container">
-      <div class="column-left">
-        <div class="panel">
-          <h2>Your Avatar</h2>
-          <div class="avatar-wrapper" id="homeAvatarContainer"></div>
-          <p class="muted" id="homeAvatarNote">Guest avatar preview only.</p>
-          <button class="btn" data-view="profile" style="margin-top:6px;">Customize Avatar</button>
+  <div class="container">
+    <div class="column-left">
+      <div class="panel" id="authPanel">
+        <h2>Account</h2>
+        <div id="authLoggedOut">
+          <label class="label">Username</label>
+          <input id="authUsername" class="input" placeholder="Enter username">
+          <label class="label">Password</label>
+          <input id="authPassword" class="input" type="password" placeholder="Enter password">
+          <button id="loginBtn" class="btn" style="margin-top:6px;">Login</button>
+          <button id="signupBtn" class="btn secondary" style="margin-top:4px;">Signup</button>
+          <div id="authMessage" class="muted" style="margin-top:4px;"></div>
         </div>
-        <div class="panel">
-          <h3>Your Summary</h3>
-          <p><strong>User:</strong> <span id="homeUserLabel">Guest</span></p>
-          <p><strong>RES Bux:</strong> <span id="homeCurrency">0</span></p>
-          <p><strong>Net Worth:</strong> <span id="homeNetWorth">0</span></p>
-          <p><strong>Owned Items:</strong> <span id="homeItemCount">0</span></p>
-        </div>
-        <div class="panel">
-          <h3>Sponsored Ads</h3>
-          <div id="homeAdsLeft"></div>
+        <div id="authLoggedIn" class="hidden">
+          <div class="muted">Logged in as</div>
+          <div id="authCurrentUser" style="font-weight:600;margin-bottom:6px;"></div>
+          <div class="muted">RES Bux:</div>
+          <div id="authCurrentCurrency" style="font-weight:600;margin-bottom:6px;"></div>
+          <button id="logoutBtn" class="btn secondary">Logout</button>
         </div>
       </div>
 
-      <div class="column-main">
+      <div class="panel">
+        <h2>Stats</h2>
+        <div class="muted">Total Users: <span id="statTotalUsers">0</span></div>
+        <div class="muted">Total Items: <span id="statTotalItems">0</span></div>
+        <div class="muted">Total Trades: <span id="statTotalTrades">0</span></div>
+        <div class="muted">Total RES in circulation: <span id="statTotalRes">0</span></div>
+      </div>
+
+      <div class="panel">
+        <h2>Friends</h2>
+        <div id="friendsList" class="muted">Login to see friends.</div>
+      </div>
+    </div>
+
+    <div class="column-main">
+      <!-- Home -->
+      <div id="homeView" class="view active">
         <div class="panel">
           <h2>Home</h2>
-          <p class="muted">Welcome to RES – Roblox Economy Revival. Classic 2017-style dashboard, fake economy, local-only data.</p>
+          <div class="flex-row">
+            <div style="flex:1;">
+              <h3>Welcome</h3>
+              <div class="muted" id="homeWelcomeText">
+                Login or signup to start trading, creating, and collecting.
+              </div>
+              <div style="margin-top:8px;">
+                <span class="pill">Classic Economy</span>
+                <span class="pill">Trading</span>
+                <span class="pill">Limiteds</span>
+              </div>
+            </div>
+            <div style="width:220px;">
+              <div class="avatar-box" id="homeAvatarBox">R6</div>
+            </div>
+          </div>
         </div>
 
         <div class="panel">
-          <div class="section-title">Continue Playing</div>
-          <div class="game-row" id="continueRow"></div>
-        </div>
-
-        <div class="panel">
-          <div class="section-title">Recommended For You</div>
-          <div class="game-row" id="recommendedRow"></div>
-        </div>
-
-        <div class="panel">
-          <div class="section-title">Popular</div>
-          <div class="game-row" id="popularRow"></div>
+          <h2>Feed</h2>
+          <div id="homeFeed" class="muted">No activity yet.</div>
         </div>
       </div>
 
-      <div class="column-right">
-        <div class="panel">
-          <h2>RES Stats</h2>
-          <p id="statUsers">Users: 0</p>
-          <p id="statItems">Items in Catalog: 0</p>
-          <p id="statTrades">Trades Created: 0</p>
-        </div>
-        <div class="panel">
-          <h3>Ads</h3>
-          <div id="homeAdsRight"></div>
-        </div>
-        <div class="panel">
-          <h3>About RES</h3>
-          <p class="muted">
-            RES (Roblox Economy Revival) is a fan-made project inspired by 2017 Roblox. Not affiliated with Roblox.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- CATALOG -->
-  <div id="catalogView" class="view">
-    <div class="container">
-      <div class="column-main">
+      <!-- Catalog -->
+      <div id="catalogView" class="view">
         <div class="panel">
           <h2>Catalog</h2>
-          <p class="muted">Browse all RES items. Limiteds have value and can be traded. Clothing is cosmetic only.</p>
+          <div class="flex-row" style="margin-bottom:8px;">
+            <div style="flex:1;">
+              <label class="label">Sort</label>
+              <select id="catalogSort" class="select">
+                <option value="default">Default</option>
+                <option value="priceLow">Price: Low → High</option>
+                <option value="priceHigh">Price: High → Low</option>
+                <option value="valueHigh">Value: High → Low</option>
+              </select>
+            </div>
+            <div style="flex:1;">
+              <label class="label">Filter</label>
+              <select id="catalogFilter" class="select">
+                <option value="all">All</option>
+                <option value="limited">Limited</option>
+                <option value="clothing">Clothing</option>
+              </select>
+            </div>
+          </div>
           <div id="catalogGrid" class="catalog-grid"></div>
         </div>
       </div>
-      <div class="column-right">
+
+      <!-- Create -->
+      <div id="createView" class="view">
         <div class="panel">
-          <h2>Info</h2>
-          <p class="muted">
-            • You cannot set item value yourself.<br>
-            • Limiteds have value and can be traded.<br>
-            • Clothing has price only and is not limited.<br>
-            • Buying costs RES Bux.<br>
-            • Clothing sales give 70% to creator, 30% to Roblox (tax).
-          </p>
+          <h2>Create Item</h2>
+          <div id="createGuestLock" class="muted">Login to create items.</div>
+          <div id="createForm" class="hidden">
+            <label class="label">Name</label>
+            <input id="createName" class="input" placeholder="Cool Fedora">
+            <label class="label">Type</label>
+            <select id="createType" class="select">
+              <option value="clothing">Clothing</option>
+              <option value="limited">Limited</option>
+            </select>
+            <label class="label">Price (RES)</label>
+            <input id="createPrice" class="input" type="number" min="0" value="100">
+            <label class="label">Base Value</label>
+            <input id="createValue" class="input" type="number" min="0" value="100">
+            <button id="createItemBtn" class="btn" style="margin-top:8px;">Create</button>
+            <div id="createMessage" class="muted" style="margin-top:4px;"></div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- CREATE -->
-  <div id="createView" class="view">
-    <div class="container">
-      <div class="column-main">
-        <div class="panel">
-          <h2>Create Clothing</h2>
-          <p class="muted">
-            Create clothing items for others to buy.<br>
-            There is a <strong>30% tax</strong> on sales that goes to Roblox (admin). You receive 70% of the price.
-          </p>
-          <label class="label">Clothing Name</label>
-          <input id="createNameInput" class="input" placeholder="RES Classic Tee">
-          <label class="label">Price (RES Bux)</label>
-          <input id="createPriceInput" class="input" type="number" placeholder="25">
-          <button class="btn" id="createClothingButton">Upload Clothing</button>
-          <div id="createMessage"></div>
-          <p class="muted" id="createGuestNote"></p>
-        </div>
-
-        <div class="panel">
-          <h2>Your Clothing & Ads</h2>
-          <p class="muted">Advertise your clothing on the home page.</p>
-          <div id="createClothingList"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PROFILE -->
-  <div id="profileView" class="view">
-    <div class="container">
-      <div class="column-left">
+      <!-- Profile -->
+      <div id="profileView" class="view">
         <div class="panel">
           <h2>Profile</h2>
-          <p><strong>Username:</strong> <span id="profileUsername">Guest</span> <span id="profileVerified"></span></p>
-          <p><strong>RES Bux:</strong> <span id="profileCurrency">0</span></p>
-          <p><strong>Net Worth:</strong> <span id="profileNetWorth">0</span></p>
-          <p><strong>Owned Items:</strong> <span id="profileItemCount">0</span></p>
-          <p><strong>Followers:</strong> <span id="profileFollowers">0</span></p>
-          <p><strong>Following:</strong> <span id="profileFollowing">0</span></p>
-        </div>
-        <div class="panel">
-          <h3>Avatar</h3>
-          <div class="avatar-wrapper" id="profileAvatarContainer"></div>
-          <button class="btn" id="saveAvatarButton" style="margin-top:6px;">Save Avatar</button>
-          <div id="avatarMessage"></div>
-          <p class="muted" id="avatarGuestNote"></p>
-        </div>
-      </div>
+          <div id="profileGuestLock" class="muted">Login to view your profile.</div>
+          <div id="profileContent" class="hidden">
+            <div class="flex-row">
+              <div style="width:220px;">
+                <div class="avatar-box" id="profileAvatarBox">R6</div>
+              </div>
+              <div style="flex:1;">
+                <h3 id="profileUsername"></h3>
+                <div class="muted">RES Bux: <span id="profileCurrency"></span></div>
+                <div class="muted">Total Inventory Value: <span id="profileTotalValue"></span></div>
+                <div style="margin-top:6px;">
+                  <span class="pill" id="profileFriendsCount">0 Friends</span>
+                  <span class="pill" id="profileTradesCount">0 Trades</span>
+                </div>
+              </div>
+            </div>
 
-      <div class="column-main">
-        <div class="panel">
-          <h2>Avatar Customization</h2>
-          <label class="label">Body Color</label>
-          <select id="bodyColorInput" class="select">
-            <option value="#4caf50">Green</option>
-            <option value="#2196f3">Blue</option>
-            <option value="#ff9800">Orange</option>
-            <option value="#9c27b0">Purple</option>
-            <option value="#9e9e9e">Grey</option>
-          </select>
-
-          <label class="label">Hat</label>
-          <select id="hatInput" class="select">
-            <option value="none">None</option>
-            <option value="black">Black Hat</option>
-            <option value="red">Red Hat</option>
-            <option value="blue">Blue Hat</option>
-          </select>
-
-          <label class="label">Accessory</label>
-          <select id="accessoryInput" class="select">
-            <option value="none">None</option>
-            <option value="visor">Visor</option>
-            <option value="band">Headband</option>
-          </select>
-
-          <label class="label">Equipped Limited (visual only)</label>
-          <select id="equippedLimitedInput" class="select"></select>
-        </div>
-
-        <div class="panel">
-          <h2>Inventory</h2>
-          <p class="muted">Items you own in this browser.</p>
-          <div id="inventoryList" class="catalog-grid"></div>
-        </div>
-      </div>
-
-      <div class="column-right">
-        <div class="panel">
-          <h3>Users</h3>
-          <div class="user-browser-list" id="userBrowserList"></div>
-        </div>
-        <div class="panel">
-          <h3>Selected User</h3>
-          <div id="selectedUserInfo" class="muted">Select a user to view.</div>
-          <div id="selectedUserActions" style="margin-top:6px;display:none;">
-            <button class="btn btn-small" id="followUserButton">Follow</button>
-            <button class="btn btn-small" id="tradeUserButton">Trade</button>
-          </div>
-          <div style="margin-top:6px;">
-            <div class="mini-inventory" id="selectedUserInventory"></div>
+            <h3 style="margin-top:12px;">Inventory</h3>
+            <div class="flex-row" style="margin-bottom:6px;">
+              <div style="flex:1;">
+                <label class="label">Filter</label>
+                <select id="inventoryFilter" class="select">
+                  <option value="all">All</option>
+                  <option value="limited">Limited</option>
+                  <option value="clothing">Clothing</option>
+                </select>
+              </div>
+            </div>
+            <div id="profileInventory" class="catalog-grid"></div>
           </div>
         </div>
-        <div class="panel">
-          <h3>Friends & Chat</h3>
-          <div class="friend-list" id="friendList"></div>
-          <div class="chat-box" id="chatBox"></div>
-          <input class="input" id="chatInput" placeholder="Message (selected friend)">
-          <button class="btn btn-small" id="chatSendButton" style="margin-top:4px;">Send</button>
-        </div>
       </div>
-    </div>
-  </div>
 
-  <!-- TRADES -->
-  <div id="tradesView" class="view">
-    <div class="container">
-      <div class="column-main">
+      <!-- Trades -->
+      <div id="tradeView" class="view">
         <div class="panel">
           <h2>Trades</h2>
-          <p class="muted">Create multi-item trades. Receiver can review, see values, accept, decline, or counter.</p>
-
-          <label class="label">Trade With</label>
-          <select id="tradeToUserInput" class="select"></select>
-
-          <div class="trade-window">
-            <div class="trade-window-column">
-              <strong>Your Offer</strong>
-              <label class="label">Add Item</label>
-              <select id="tradeOfferAddInput" class="select"></select>
-              <button class="btn btn-small" id="tradeOfferAddButton">Add</button>
-              <div class="trade-window-items" id="tradeOfferItems"></div>
+          <div id="tradeGuestLock" class="muted">Login to trade.</div>
+          <div id="tradeContent" class="hidden">
+            <h3>Create Trade</h3>
+            <div class="flex-row" style="margin-bottom:6px;">
+              <div style="flex:1;">
+                <label class="label">Trade with user</label>
+                <input id="tradeTargetUser" class="input" placeholder="username">
+              </div>
+              <div style="width:140px;">
+                <label class="label">&nbsp;</label>
+                <button id="openTradeWindowBtn" class="btn small" style="width:100%;">Open Trade Window</button>
+              </div>
             </div>
-            <div class="trade-window-column">
-              <strong>Your Request</strong>
-              <label class="label">Add Item</label>
-              <select id="tradeRequestAddInput" class="select"></select>
-              <button class="btn btn-small" id="tradeRequestAddButton">Add</button>
-              <div class="trade-window-items" id="tradeRequestItems"></div>
+            <div id="tradeMessage" class="muted" style="margin-bottom:8px;"></div>
+
+            <div id="tradeWindow" class="hidden">
+              <div class="trade-columns">
+                <div class="trade-column">
+                  <div class="flex-between">
+                    <strong>Your Offer</strong>
+                    <span class="muted" id="tradeOfferUserLabel"></span>
+                  </div>
+                  <label class="label" style="margin-top:4px;">Add Item</label>
+                  <select id="tradeOfferAddSelect" class="select"></select>
+                  <button id="tradeOfferAddBtn" class="btn small" style="margin-top:4px;">Add</button>
+
+                  <div class="trade-bux-section">
+                    <label class="label">Add RES Bux</label>
+                    <input id="tradeOfferBuxInput" class="input" type="number" min="0" value="0">
+                  </div>
+
+                  <div class="trade-items-list" id="tradeOfferItems" style="margin-top:6px;"></div>
+                </div>
+
+                <div class="trade-column">
+                  <div class="flex-between">
+                    <strong>Your Request</strong>
+                    <span class="muted" id="tradeRequestUserLabel"></span>
+                  </div>
+                  <label class="label" style="margin-top:4px;">Request Item</label>
+                  <select id="tradeRequestAddSelect" class="select"></select>
+                  <button id="tradeRequestAddBtn" class="btn small" style="margin-top:4px;">Add</button>
+
+                  <div class="trade-bux-section">
+                    <label class="label">Add RES Bux</label>
+                    <input id="tradeRequestBuxInput" class="input" type="number" min="0" value="0">
+                  </div>
+
+                  <div class="trade-items-list" id="tradeRequestItems" style="margin-top:6px;"></div>
+                </div>
+              </div>
+
+              <div class="trade-summary">
+                <span id="tradeOfferTotalLabel"></span>
+                <span id="tradeRequestTotalLabel"></span>
+                <span id="tradeDiffLabel"></span>
+              </div>
+
+              <div class="fairness-meter">
+                <div id="tradeFairnessFill" class="fairness-fill"></div>
+              </div>
+              <div id="tradeFairnessLabel" class="fairness-label"></div>
+
+              <div class="flex-between" style="margin-top:8px;">
+                <button id="createTradeBtn" class="btn">Send Trade</button>
+                <button id="closeTradeWindowBtn" class="btn secondary">Close</button>
+              </div>
             </div>
+
+            <h3 style="margin-top:14px;">Your Trades</h3>
+            <div id="tradeListIncomingHeader" class="muted" style="margin-top:4px;">Incoming</div>
+            <div id="tradeListIncoming"></div>
+            <div id="tradeListOutgoingHeader" class="muted" style="margin-top:8px;">Outgoing</div>
+            <div id="tradeListOutgoing"></div>
           </div>
-
-          <button class="btn" id="createTradeButton" style="margin-top:8px;">Send Trade</button>
-          <div id="tradeMessage"></div>
-          <p class="muted" id="tradesGuestNote"></p>
-        </div>
-
-        <div class="panel">
-          <h2>Your Trades</h2>
-          <div id="tradeList" class="trade-list"></div>
         </div>
       </div>
 
-      <div class="column-right">
+      <!-- Admin -->
+      <div id="adminView" class="view">
         <div class="panel">
-          <h2>Info</h2>
-          <p class="muted">
-            • Users, items, avatars, and trades are all stored in your browser using localStorage.<br>
-            • Guests can only view. Accounts can buy, trade, and customize.<br>
-            • True global online users would require a real backend server.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
+          <h2>Admin</h2>
+          <div id="adminGuestLock" class="muted">Admin only.</div>
+          <div id="adminContent" class="hidden">
+            <h3>Give RES</h3>
+            <label class="label">User</label>
+            <input id="adminGiveUser" class="input" placeholder="username">
+            <label class="label">Amount</label>
+            <input id="adminGiveAmount" class="input" type="number" value="1000">
+            <button id="adminGiveBtn" class="btn" style="margin-top:6px;">Give RES</button>
 
-  <!-- SETTINGS -->
-  <div id="settingsView" class="view">
-    <div class="container">
-      <div class="column-main">
-        <div class="panel">
-          <h2>Settings</h2>
-          <div class="toggle-row">
-            <span>Theme</span>
-            <select id="themeSelect" class="select" style="max-width:180px;">
-              <option value="light">Light (2017 Roblox)</option>
-              <option value="dark">Dark (modern)</option>
-            </select>
+            <h3 style="margin-top:12px;">Delete Item</h3>
+            <label class="label">Item ID</label>
+            <input id="adminDeleteItemId" class="input" placeholder="1">
+            <button id="adminDeleteItemBtn" class="btn danger" style="margin-top:6px;">Delete Item</button>
+            <div class="confirm-text">This cannot be undone.</div>
+
+            <div id="adminMessage" class="muted" style="margin-top:8px;"></div>
           </div>
-          <p class="muted">Theme preference is saved per browser.</p>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- ADMIN -->
-  <div id="adminView" class="view">
-    <div class="container">
-      <div class="column-main">
-        <div class="panel">
-          <h2>Admin Panel</h2>
-          <p class="muted">Only visible to the admin account: <strong>roblox owner admin</strong>.</p>
-          <div id="adminWarning" class="admin-only"></div>
-
-          <h3>User Management</h3>
-          <label class="label">Select User</label>
-          <select id="adminUserSelect" class="select"></select>
-
-          <label class="label">Set RES Bux</label>
-          <input id="adminCurrencyInput" class="input" type="number" placeholder="1000">
-          <button class="btn btn-small" id="adminSetCurrencyButton">Set Currency</button>
-
-          <div style="margin-top:8px;">
-            <button class="btn btn-small" id="adminBanButton" style="background:#ef4444;">Ban User</button>
-            <button class="btn btn-small" id="adminUnbanButton" style="background:#10b981;">Unban User</button>
-          </div>
-
-          <h3 style="margin-top:16px;">Create Limited</h3>
-          <label class="label">Item Name</label>
-          <input id="adminItemNameInput" class="input" placeholder="Official RES Limited">
-          <label class="label">Rarity</label>
-          <select id="adminItemRarityInput" class="select">
-            <option value="rare">Rare</option>
-            <option value="epic">Epic</option>
-            <option value="legendary">Legendary</option>
-          </select>
-          <label class="label">Value</label>
-          <input id="adminItemValueInput" class="input" type="number" placeholder="5000">
-          <label class="label">Price (RES Bux)</label>
-          <input id="adminItemPriceInput" class="input" type="number" placeholder="1000">
-          <button class="btn btn-small" id="adminCreateLimitedButton">Create Limited</button>
-          <div id="adminMessage"></div>
+    <div class="column-right">
+      <div class="panel">
+        <h2>Chat</h2>
+        <div id="chatBox" class="chat-box"></div>
+        <div class="chat-input-row">
+          <input id="chatInput" class="input" placeholder="Say something...">
+          <button id="chatSendBtn" class="btn small">Send</button>
         </div>
       </div>
-    </div>
-  </div>
 
-  <!-- AUTH MODAL -->
-  <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
-    <div style="background:var(--bg-card); padding:18px; border-radius:6px; width:280px; box-shadow:0 2px 8px rgba(0,0,0,0.3); border:1px solid var(--border-soft);">
-      <h3 style="margin-top:0; color:var(--accent); font-size:16px;">Sign Up / Login</h3>
-      <p class="muted">Usernames must be unique in this browser. Password required.</p>
-      <label class="label">Username</label>
-      <input id="authUsernameInput" class="input" placeholder="Username">
-      <label class="label">Password</label>
-      <input id="authPasswordInput" class="input" type="password" placeholder="Password">
-      <button class="btn" id="authSubmitButton">Continue</button>
-      <button class="btn" style="background:#9ca3af;color:#111827;margin-left:6px;" id="authCancelButton">Cancel</button>
-      <div id="authMessage"></div>
+      <div class="panel">
+        <h2>Notifications</h2>
+        <div id="notifList" class="notif-list"></div>
+      </div>
     </div>
-  </div>
-
-  <div class="footer">
-    RES (Roblox Economy Revival) is a fan-made project inspired by classic Roblox economy vibes.<br>
-    Not affiliated with Roblox Corporation. All data is fake and local.
   </div>
 
   <script>
-    const STORAGE_KEY = 'res_data_v4';
-    const ADMIN_USERNAME = 'roblox owner admin';
-    const ADMIN_PASSWORD = 'admin';
+    const ADMIN_USERNAME = "roblox owner admin";
+
+    let db = {
+      users: {},
+      items: {},
+      trades: [],
+      chat: [],
+      notifications: [],
+      nextItemId: 1,
+      currentUser: null
+    };
 
     function loadData() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) {
-          const initial = {
-            users: {},
-            items: {},
-            trades: [],
-            currentUser: null,
-            nextItemId: 1,
-            theme: 'light'
-          };
-          localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-          return initial;
+        const raw = localStorage.getItem("res_db_v1");
+        if (!raw) return;
+        const parsed = JSON.parse(raw);
+        if (parsed && typeof parsed === "object") {
+          db = Object.assign(db, parsed);
         }
-        return JSON.parse(raw);
       } catch (e) {
-        console.error('loadData error', e);
-        return {
-          users: {},
-          items: {},
-          trades: [],
-          currentUser: null,
-          nextItemId: 1,
-          theme: 'light'
-        };
+        console.error("loadData error", e);
       }
     }
 
     function saveData() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-    }
-
-    let db = loadData();
-
-    function ensureAdminAccount() {
-      const key = ADMIN_USERNAME.toLowerCase();
-      if (!db.users[key]) {
-        db.users[key] = {
-          password: ADMIN_PASSWORD,
-          avatar: {
-            bodyColor: '#9e9e9e',
-            hat: 'none',
-            accessory: 'none',
-            equippedLimitedId: null
-          },
-          inventory: [],
-          currency: 100000,
-          isAdmin: true,
-          verified: true,
-          banned: false,
-          followers: [],
-          following: [],
-          friends: [],
-          messages: [],
-          notifications: []
-        };
-        saveData();
-      } else {
-        const u = db.users[key];
-        u.password = u.password || ADMIN_PASSWORD;
-        u.isAdmin = true;
-        u.verified = true;
-        if (u.currency == null) u.currency = 100000;
-        if (u.banned == null) u.banned = false;
-        u.followers = u.followers || [];
-        u.following = u.following || [];
-        u.friends = u.friends || [];
-        u.messages = u.messages || [];
-        u.notifications = u.notifications || [];
-        saveData();
+      try {
+        localStorage.setItem("res_db_v1", JSON.stringify(db));
+      } catch (e) {
+        console.error("saveData error", e);
       }
     }
-    ensureAdminAccount();
-
-    function seedItemsIfEmpty() {
-      if (Object.keys(db.items).length === 0) {
-        const defaults = [
-          { name: 'Crimson Crown of RES', rarity: 'legendary', value: 3200, price: 500, type: 'limited' },
-          { name: 'Retro RES Fedora', rarity: 'legendary', value: 5800, price: 800, type: 'limited' },
-          { name: 'Neon Brick Shades', rarity: 'epic', value: 1450, price: 250, type: 'limited' },
-          { name: 'Classic RES Top Hat', rarity: 'rare', value: 980, price: 200, type: 'limited' }
-        ];
-        defaults.forEach(item => {
-          const id = db.nextItemId++;
-          db.items[id] = {
-            id,
-            name: item.name,
-            rarity: item.rarity,
-            value: item.value,
-            price: item.price,
-            type: item.type,
-            owner: null,
-            creator: ADMIN_USERNAME.toLowerCase(),
-            advertised: false
-          };
-        });
-        saveData();
-      } else {
-        Object.values(db.items).forEach(it => {
-          if (it.advertised == null) it.advertised = false;
-        });
-        saveData();
-      }
-    }
-    seedItemsIfEmpty();
 
     function getCurrentUser() {
       if (!db.currentUser) return null;
       return db.users[db.currentUser] || null;
     }
 
-    const themeSelect = document.getElementById('themeSelect');
-    function applyTheme() {
-      document.body.classList.toggle('dark', db.theme === 'dark');
-      themeSelect.value = db.theme;
-    }
-    themeSelect.addEventListener('change', () => {
-      db.theme = themeSelect.value;
-      saveData();
-      applyTheme();
-    });
-
-    const views = {
-      home: document.getElementById('homeView'),
-      catalog: document.getElementById('catalogView'),
-      create: document.getElementById('createView'),
-      profile: document.getElementById('profileView'),
-      trades: document.getElementById('tradesView'),
-      settings: document.getElementById('settingsView'),
-      admin: document.getElementById('adminView')
-    };
-
-    function showView(name) {
-      Object.keys(views).forEach(v => {
-        views[v].classList.toggle('active', v === name);
-      });
-      if (name === 'catalog') renderCatalog();
-      if (name === 'profile') renderProfile();
-      if (name === 'trades') renderTrades();
-      if (name === 'home') {
-        renderStats();
-        renderHomeSummary();
-      }
-      if (name === 'admin') renderAdminPanel();
-      if (name === 'create') renderCreateClothingList();
-    }
-
-    document.querySelectorAll('.nav-links a, button[data-view]').forEach(el => {
-      el.addEventListener('click', () => {
-        const view = el.getAttribute('data-view');
-        if (view) showView(view);
-      });
-    });
-
-    const authModal = document.getElementById('authModal');
-    const authButton = document.getElementById('authButton');
-    const authUsernameInput = document.getElementById('authUsernameInput');
-    const authPasswordInput = document.getElementById('authPasswordInput');
-    const authSubmitButton = document.getElementById('authSubmitButton');
-    const authCancelButton = document.getElementById('authCancelButton');
-    const authMessage = document.getElementById('authMessage');
-    const navUserLabel = document.getElementById('navUserLabel');
-    const adminNavLink = document.getElementById('adminNavLink');
-
-    function openAuthModal() {
-      authUsernameInput.value = '';
-      authPasswordInput.value = '';
-      authMessage.textContent = '';
-      authModal.style.display = 'flex';
-      authUsernameInput.focus();
-    }
-
-    function closeAuthModal() {
-      authModal.style.display = 'none';
-    }
-
-    authButton.addEventListener('click', openAuthModal);
-    authCancelButton.addEventListener('click', closeAuthModal);
-
-    authSubmitButton.addEventListener('click', () => {
-      const usernameRaw = authUsernameInput.value.trim();
-      const passwordRaw = authPasswordInput.value.trim();
-      if (!usernameRaw || !passwordRaw) {
-        authMessage.textContent = 'Username and password required.';
-        authMessage.className = 'error';
-        return;
-      }
-      const usernameKey = usernameRaw.toLowerCase();
-
-      if (!db.users[usernameKey]) {
-        db.users[usernameKey] = {
-          password: passwordRaw,
-          avatar: {
-            bodyColor: '#9e9e9e',
-            hat: 'none',
-            accessory: 'none',
-            equippedLimitedId: null
-          },
+    function ensureDemoData() {
+      if (Object.keys(db.users).length === 0) {
+        db.users["roblox owner admin"] = {
+          username: "roblox owner admin",
+          password: "admin",
+          currency: 1000000,
           inventory: [],
-          currency: 1000,
-          isAdmin: false,
-          verified: false,
-          banned: false,
-          followers: [],
-          following: [],
           friends: [],
-          messages: [],
-          notifications: []
+          createdAt: Date.now()
         };
-        authMessage.textContent = 'Account created. Logged in as ' + usernameRaw;
-        authMessage.className = 'success';
-      } else {
-        const user = db.users[usernameKey];
-        if (user.password !== passwordRaw) {
-          authMessage.textContent = 'Incorrect password.';
-          authMessage.className = 'error';
-          return;
-        }
-        if (user.banned) {
-          authMessage.textContent = 'This account is banned.';
-          authMessage.className = 'error';
-          return;
-        }
-        authMessage.textContent = 'Logged in as ' + usernameRaw;
-        authMessage.className = 'success';
+        db.currentUser = "roblox owner admin";
       }
-
-      db.currentUser = usernameKey;
-      saveData();
-      updateNavUserLabel();
-      setTimeout(closeAuthModal, 400);
-      renderProfile();
-      renderTrades();
-      renderStats();
-      renderHomeSummary();
-      updateGuestLocks();
-      updateAdminNavVisibility();
-      renderNotifications();
-    });
-
-    function updateNavUserLabel() {
-      const user = getCurrentUser();
-      if (!user) {
-        navUserLabel.textContent = 'Guest (view only)';
-        return;
-      }
-      let label = db.currentUser;
-      if (user.verified) label += ' ✓';
-      label += user.isAdmin ? ' (admin)' : ' (full access)';
-      navUserLabel.textContent = label;
-    }
-
-    function updateAdminNavVisibility() {
-      const user = getCurrentUser();
-      adminNavLink.style.display = user && user.isAdmin ? 'inline-block' : 'none';
-    }
-
-    function updateGuestLocks() {
-      const user = getCurrentUser();
-      const isGuest = !user;
-
-      document.getElementById('createClothingButton').disabled = isGuest;
-      document.getElementById('createClothingButton').classList.toggle('btn-disabled', isGuest);
-      document.getElementById('createGuestNote').textContent = isGuest ? 'Guests cannot upload clothing. Sign up to create.' : '';
-
-      document.getElementById('saveAvatarButton').disabled = isGuest;
-      document.getElementById('saveAvatarButton').classList.toggle('btn-disabled', isGuest);
-      document.getElementById('avatarGuestNote').textContent = isGuest ? 'Guests cannot save avatar changes. Sign up to customize your avatar.' : '';
-
-      document.getElementById('createTradeButton').disabled = isGuest;
-      document.getElementById('createTradeButton').classList.toggle('btn-disabled', isGuest);
-      document.getElementById('tradesGuestNote').textContent = isGuest ? 'Guests cannot create trades. Sign up to trade items.' : '';
-
-      updateNavUserLabel();
-    }
-
-    const statUsers = document.getElementById('statUsers');
-    const statItems = document.getElementById('statItems');
-    const statTrades = document.getElementById('statTrades');
-
-    function renderStats() {
-      statUsers.textContent = 'Users: ' + Object.keys(db.users).length;
-      statItems.textContent = 'Items in Catalog: ' + Object.keys(db.items).length;
-      statTrades.textContent = 'Trades Created: ' + db.trades.length;
-    }
-
-    const continueRow = document.getElementById('continueRow');
-    const recommendedRow = document.getElementById('recommendedRow');
-    const popularRow = document.getElementById('popularRow');
-
-    const fakeGames = [
-      { name: 'RES Trading Plaza', players: 124, genre: 'Social' },
-      { name: 'Classic Obby Revival', players: 89, genre: 'Obby' },
-      { name: 'Brick Battle Arena', players: 203, genre: 'Fighting' },
-      { name: 'Tycoon City 2017', players: 156, genre: 'Tycoon' },
-      { name: 'Hangout Hub', players: 77, genre: 'Social' },
-      { name: 'Limited Flex Lounge', players: 54, genre: 'Roleplay' }
-    ];
-
-    function renderGameRow(container, games) {
-      container.innerHTML = '';
-      games.forEach(g => {
-        const card = document.createElement('div');
-        card.className = 'game-card';
-        card.innerHTML = `
-          <div class="game-thumb"></div>
-          <div class="game-info">
-            <div class="game-name">${g.name}</div>
-            <div class="game-meta">${g.players} playing • ${g.genre}</div>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    const homeAdsLeft = document.getElementById('homeAdsLeft');
-    const homeAdsRight = document.getElementById('homeAdsRight');
-
-    function renderAds() {
-      const ads = Object.values(db.items).filter(i => i.type === 'clothing' && i.advertised);
-      homeAdsLeft.innerHTML = '';
-      homeAdsRight.innerHTML = '';
-      ads.slice(0, 3).forEach(ad => {
-        const div = document.createElement('div');
-        div.className = 'ad-card';
-        div.innerHTML = `
-          <div class="ad-title">${ad.name}</div>
-          <div class="muted">By ${ad.creator || 'Unknown'} • ${ad.price} RES</div>
-        `;
-        homeAdsLeft.appendChild(div);
-      });
-      ads.slice(3, 6).forEach(ad => {
-        const div = document.createElement('div');
-        div.className = 'ad-card';
-        div.innerHTML = `
-          <div class="ad-title">${ad.name}</div>
-          <div class="muted">By ${ad.creator || 'Unknown'} • ${ad.price} RES</div>
-        `;
-        homeAdsRight.appendChild(div);
-      });
-    }
-
-    function renderHomeSummary() {
-      const user = getCurrentUser();
-      const homeUserLabel = document.getElementById('homeUserLabel');
-      const homeNetWorth = document.getElementById('homeNetWorth');
-      const homeItemCount = document.getElementById('homeItemCount');
-      const homeAvatarNote = document.getElementById('homeAvatarNote');
-      const homeCurrency = document.getElementById('homeCurrency');
-
-      if (!user) {
-        homeUserLabel.textContent = 'Guest';
-        homeNetWorth.textContent = '0';
-        homeItemCount.textContent = '0';
-        homeAvatarNote.textContent = 'Guest avatar preview only.';
-        homeCurrency.textContent = '0';
-      } else {
-        homeUserLabel.textContent = db.currentUser;
-        let netWorth = 0;
-        user.inventory.forEach(id => {
-          const item = db.items[id];
-          if (item && item.value) netWorth += item.value;
+      if (Object.keys(db.items).length === 0) {
+        const baseItems = [
+          { name: "Classic Fedora", type: "limited", price: 1000, value: 1000 },
+          { name: "Blue Top Hat", type: "limited", price: 800, value: 800 },
+          { name: "Red Shirt", type: "clothing", price: 25, value: 25 },
+          { name: "Black Pants", type: "clothing", price: 25, value: 25 }
+        ];
+        baseItems.forEach(it => {
+          const id = db.nextItemId++;
+          db.items[id] = {
+            id,
+            name: it.name,
+            type: it.type,
+            price: it.price,
+            value: it.value,
+            creator: "roblox owner admin"
+          };
         });
-        homeNetWorth.textContent = netWorth;
-        homeItemCount.textContent = user.inventory.length;
-        homeAvatarNote.textContent = 'Logged-in avatar preview.';
-        homeCurrency.textContent = user.currency || 0;
       }
-
-      renderGameRow(continueRow, fakeGames.slice(0, 3));
-      renderGameRow(recommendedRow, fakeGames.slice(3));
-      renderGameRow(popularRow, fakeGames);
-      renderAds();
-    }
-
-    const catalogGrid = document.getElementById('catalogGrid');
-
-    function rarityBadgeClass(r) {
-      if (r === 'rare') return 'badge badge-rare';
-      if (r === 'epic') return 'badge badge-epic';
-      if (r === 'legendary') return 'badge badge-legendary';
-      return 'badge';
     }
 
     function itemInitials(name) {
-      const parts = name.trim().split(' ');
+      if (!name) return "?";
+      const parts = name.split(" ");
       if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
       return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
     }
 
-    function renderCatalog() {
+    function rarityBadgeClass(item) {
+      if (!item || item.type !== "limited") return "";
+      if (item.value >= 2000) return "pill red";
+      if (item.value >= 1000) return "pill yellow";
+      return "pill green";
+    }
+
+    function formatRes(n) {
+      return (n || 0).toLocaleString() + " RES";
+    }
+
+    function addNotification(text) {
+      db.notifications.unshift({
+        id: Date.now() + Math.random(),
+        text,
+        createdAt: Date.now()
+      });
+      if (db.notifications.length > 50) db.notifications.pop();
+      saveData();
+      renderNotifications();
+    }
+
+    function addChatMessage(from, text) {
+      db.chat.push({
+        id: Date.now() + Math.random(),
+        from,
+        text,
+        createdAt: Date.now()
+      });
+      if (db.chat.length > 100) db.chat.shift();
+      saveData();
+      renderChat();
+    }
+
+    const views = {
+      homeView: document.getElementById("homeView"),
+      catalogView: document.getElementById("catalogView"),
+      createView: document.getElementById("createView"),
+      profileView: document.getElementById("profileView"),
+      tradeView: document.getElementById("tradeView"),
+      adminView: document.getElementById("adminView")
+    };
+
+    function showView(id) {
+      Object.values(views).forEach(v => v.classList.remove("active"));
+      if (views[id]) views[id].classList.add("active");
+    }
+
+    const navLinks = document.querySelectorAll(".nav-links a");
+    navLinks.forEach(a => {
+      a.addEventListener("click", () => {
+        const v = a.getAttribute("data-view");
+        if (!v) return;
+        showView(v);
+        renderAll();
+      });
+    });
+
+    const navUserLabel = document.getElementById("navUserLabel");
+    const navCurrencyLabel = document.getElementById("navCurrencyLabel");
+    const authBtn = document.getElementById("authBtn");
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const notifBell = document.getElementById("notifBell");
+    const notifCount = document.getElementById("notifCount");
+    const adminNavLink = document.getElementById("adminNavLink");
+
+    const authLoggedOut = document.getElementById("authLoggedOut");
+    const authLoggedIn = document.getElementById("authLoggedIn");
+    const authUsername = document.getElementById("authUsername");
+    const authPassword = document.getElementById("authPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const signupBtn = document.getElementById("signupBtn");
+    const authMessage = document.getElementById("authMessage");
+    const authCurrentUser = document.getElementById("authCurrentUser");
+    const authCurrentCurrency = document.getElementById("authCurrentCurrency");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    const statTotalUsers = document.getElementById("statTotalUsers");
+    const statTotalItems = document.getElementById("statTotalItems");
+    const statTotalTrades = document.getElementById("statTotalTrades");
+    const statTotalRes = document.getElementById("statTotalRes");
+
+    const friendsList = document.getElementById("friendsList");
+
+    const homeWelcomeText = document.getElementById("homeWelcomeText");
+    const homeAvatarBox = document.getElementById("homeAvatarBox");
+    const homeFeed = document.getElementById("homeFeed");
+
+    const catalogGrid = document.getElementById("catalogGrid");
+    const catalogSort = document.getElementById("catalogSort");
+    const catalogFilter = document.getElementById("catalogFilter");
+
+    const createGuestLock = document.getElementById("createGuestLock");
+    const createForm = document.getElementById("createForm");
+    const createName = document.getElementById("createName");
+    const createType = document.getElementById("createType");
+    const createPrice = document.getElementById("createPrice");
+    const createValue = document.getElementById("createValue");
+    const createItemBtn = document.getElementById("createItemBtn");
+    const createMessage = document.getElementById("createMessage");
+
+    const profileGuestLock = document.getElementById("profileGuestLock");
+    const profileContent = document.getElementById("profileContent");
+    const profileAvatarBox = document.getElementById("profileAvatarBox");
+    const profileUsername = document.getElementById("profileUsername");
+    const profileCurrency = document.getElementById("profileCurrency");
+    const profileTotalValue = document.getElementById("profileTotalValue");
+    const profileFriendsCount = document.getElementById("profileFriendsCount");
+    const profileTradesCount = document.getElementById("profileTradesCount");
+    const profileInventory = document.getElementById("profileInventory");
+    const inventoryFilter = document.getElementById("inventoryFilter");
+
+    const tradeGuestLock = document.getElementById("tradeGuestLock");
+    const tradeContent = document.getElementById("tradeContent");
+    const tradeTargetUser = document.getElementById("tradeTargetUser");
+    const openTradeWindowBtn = document.getElementById("openTradeWindowBtn");
+    const tradeMessage = document.getElementById("tradeMessage");
+    const tradeWindow = document.getElementById("tradeWindow");
+    const tradeOfferUserLabel = document.getElementById("tradeOfferUserLabel");
+    const tradeRequestUserLabel = document.getElementById("tradeRequestUserLabel");
+    const tradeOfferAddSelect = document.getElementById("tradeOfferAddSelect");
+    const tradeRequestAddSelect = document.getElementById("tradeRequestAddSelect");
+    const tradeOfferAddBtn = document.getElementById("tradeOfferAddBtn");
+    const tradeRequestAddBtn = document.getElementById("tradeRequestAddBtn");
+    const tradeOfferItems = document.getElementById("tradeOfferItems");
+    const tradeRequestItems = document.getElementById("tradeRequestItems");
+    const tradeOfferBuxInput = document.getElementById("tradeOfferBuxInput");
+    const tradeRequestBuxInput = document.getElementById("tradeRequestBuxInput");
+    const tradeOfferTotalLabel = document.getElementById("tradeOfferTotalLabel");
+    const tradeRequestTotalLabel = document.getElementById("tradeRequestTotalLabel");
+    const tradeDiffLabel = document.getElementById("tradeDiffLabel");
+    const tradeFairnessFill = document.getElementById("tradeFairnessFill");
+    const tradeFairnessLabel = document.getElementById("tradeFairnessLabel");
+    const createTradeBtn = document.getElementById("createTradeBtn");
+    const closeTradeWindowBtn = document.getElementById("closeTradeWindowBtn");
+    const tradeListIncoming = document.getElementById("tradeListIncoming");
+    const tradeListOutgoing = document.getElementById("tradeListOutgoing");
+
+    const adminGuestLock = document.getElementById("adminGuestLock");
+    const adminContent = document.getElementById("adminContent");
+    const adminGiveUser = document.getElementById("adminGiveUser");
+    const adminGiveAmount = document.getElementById("adminGiveAmount");
+    const adminGiveBtn = document.getElementById("adminGiveBtn");
+    const adminDeleteItemId = document.getElementById("adminDeleteItemId");
+    const adminDeleteItemBtn = document.getElementById("adminDeleteItemBtn");
+    const adminMessage = document.getElementById("adminMessage");
+
+    const chatBox = document.getElementById("chatBox");
+    const chatInput = document.getElementById("chatInput");
+    const chatSendBtn = document.getElementById("chatSendBtn");
+
+    const notifList = document.getElementById("notifList");
+
+    const globalSearchInput = document.getElementById("globalSearchInput");
+
+    let currentOfferIds = [];
+    let currentRequestIds = [];
+    let currentTradeTarget = null;
+
+    function renderAuth() {
       const user = getCurrentUser();
-      catalogGrid.innerHTML = '';
-      const items = Object.values(db.items).sort((a,b) => (b.value || 0) - (a.value || 0));
-      items.forEach(item => {
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        const isLimited = item.type === 'limited';
-        const badgeClass = isLimited ? rarityBadgeClass(item.rarity) : 'badge badge-clothing';
-        const badgeText = isLimited ? item.rarity.toUpperCase() : 'CLOTHING';
-        const valueLine = isLimited && item.value ? `<div class="item-meta">Value: ${item.value}</div>` : '';
-        const ownerText = item.owner || 'None';
-        const creatorText = item.creator || 'None';
+      if (!user) {
+        authLoggedOut.classList.remove("hidden");
+        authLoggedIn.classList.add("hidden");
+        navUserLabel.textContent = "Guest";
+        navCurrencyLabel.textContent = "0 RES";
+        authBtn.textContent = "Login / Signup";
+        adminNavLink.classList.add("hidden");
+      } else {
+        authLoggedOut.classList.add("hidden");
+        authLoggedIn.classList.remove("hidden");
+        authCurrentUser.textContent = user.username;
+        authCurrentCurrency.textContent = formatRes(user.currency);
+        navUserLabel.textContent = user.username;
+        navCurrencyLabel.textContent = formatRes(user.currency);
+        authBtn.textContent = "Account";
+        if (user.username === ADMIN_USERNAME) {
+          adminNavLink.classList.remove("hidden");
+        } else {
+          adminNavLink.classList.add("hidden");
+        }
+      }
+    }
 
-        const buyButton = document.createElement('button');
-        buyButton.className = 'btn btn-small';
-        buyButton.textContent = 'Buy for ' + item.price + ' RES';
-        buyButton.disabled = !user;
-        if (!user) buyButton.classList.add('btn-disabled');
+    function renderStats() {
+      statTotalUsers.textContent = Object.keys(db.users).length;
+      statTotalItems.textContent = Object.keys(db.items).length;
+      statTotalTrades.textContent = db.trades.length;
+      let totalRes = 0;
+      Object.values(db.users).forEach(u => totalRes += (u.currency || 0));
+      statTotalRes.textContent = formatRes(totalRes);
+    }
 
-        buyButton.addEventListener('click', () => {
-          if (!user) return;
-          if (user.banned) {
-            alert('You are banned and cannot buy items.');
-            return;
-          }
-          if (user.currency < item.price) {
-            alert('Not enough RES Bux.');
-            return;
-          }
+    function renderFriends() {
+      const user = getCurrentUser();
+      if (!user) {
+        friendsList.textContent = "Login to see friends.";
+        return;
+      }
+      const friends = (user.friends || []).slice().sort();
+      if (friends.length === 0) {
+        friendsList.textContent = "No friends yet.";
+        return;
+      }
+      friendsList.innerHTML = "";
+      friends.forEach(f => {
+        const div = document.createElement("div");
+        div.textContent = f;
+        friendsList.appendChild(div);
+      });
+    }
 
-          if (item.type === 'clothing' && item.creator) {
-            const creatorKey = item.creator.toLowerCase();
-            const creator = db.users[creatorKey];
-            const adminKey = ADMIN_USERNAME.toLowerCase();
-            const adminUser = db.users[adminKey];
-
-            const tax = Math.floor(item.price * 0.3);
-            const payout = item.price - tax;
-
-            user.currency -= item.price;
-            if (creator) {
-              creator.currency = (creator.currency || 0) + payout;
-              addNotification(creatorKey, `${db.currentUser} bought your clothing "${item.name}" (+${payout} RES after tax).`);
-            }
-            if (adminUser) {
-              adminUser.currency = (adminUser.currency || 0) + tax;
-            }
-          } else {
-            user.currency -= item.price;
-          }
-
-          if (!user.inventory.includes(item.id)) {
-            user.inventory.push(item.id);
-          }
-          item.owner = db.currentUser;
-
-          saveData();
-          renderCatalog();
-          renderProfile();
-          renderHomeSummary();
-          renderStats();
+    function renderHome() {
+      const user = getCurrentUser();
+      if (!user) {
+        homeWelcomeText.textContent = "Login or signup to start trading, creating, and collecting.";
+        homeAvatarBox.textContent = "R6";
+      } else {
+        homeWelcomeText.textContent = `Welcome back, ${user.username}. Start trading, creating, and flexing your inventory.`;
+        homeAvatarBox.textContent = itemInitials(user.username);
+      }
+      if (db.trades.length === 0) {
+        homeFeed.textContent = "No trade activity yet.";
+      } else {
+        const recent = db.trades.slice(-5).reverse();
+        homeFeed.innerHTML = "";
+        recent.forEach(t => {
+          const from = t.from;
+          const to = t.to;
+          const div = document.createElement("div");
+          div.className = "muted";
+          div.textContent = `${from} traded with ${to} (${t.status})`;
+          homeFeed.appendChild(div);
         });
+      }
+    }
 
-        card.innerHTML = `
-          <div class="item-thumb">${itemInitials(item.name)}</div>
-          <div class="item-content">
-            <div class="item-name">${item.name}</div>
-            <div class="item-meta">Price: ${item.price} RES</div>
-            ${valueLine}
-            <div class="item-meta">Owner: ${ownerText}</div>
-            <div class="item-meta">Creator: ${creatorText}</div>
-            <span class="${badgeClass}">${badgeText}</span>
-          </div>
-        `;
-        card.querySelector('.item-content').appendChild(buyButton);
+    function renderCatalog() {
+      let items = Object.values(db.items);
+      const filter = catalogFilter.value;
+      if (filter === "limited") items = items.filter(i => i.type === "limited");
+      if (filter === "clothing") items = items.filter(i => i.type === "clothing");
+
+      const sort = catalogSort.value;
+      if (sort === "priceLow") items.sort((a,b)=>a.price-b.price);
+      if (sort === "priceHigh") items.sort((a,b)=>b.price-a.price);
+      if (sort === "valueHigh") items.sort((a,b)=>(b.value||0)-(a.value||0));
+
+      catalogGrid.innerHTML = "";
+      const user = getCurrentUser();
+
+      items.forEach(item => {
+        const card = document.createElement("div");
+        card.className = "item-card";
+
+        const thumb = document.createElement("div");
+        thumb.className = "item-thumb";
+        thumb.textContent = itemInitials(item.name);
+        card.appendChild(thumb);
+
+        const nameRow = document.createElement("div");
+        nameRow.className = "item-name";
+        nameRow.textContent = item.name;
+        if (item.type === "limited") {
+          const tag = document.createElement("span");
+          tag.className = "tag-limited";
+          tag.textContent = "LIMITED";
+          nameRow.appendChild(tag);
+        }
+        card.appendChild(nameRow);
+
+        const meta = document.createElement("div");
+        meta.className = "item-meta";
+        meta.textContent = `Price: ${formatRes(item.price)} • Value: ${item.value}`;
+        card.appendChild(meta);
+
+        const creator = document.createElement("div");
+        creator.className = "muted";
+        creator.textContent = `Creator: ${item.creator}`;
+        card.appendChild(creator);
+
+        const btnRow = document.createElement("div");
+        btnRow.style.marginTop = "4px";
+
+        const buyBtn = document.createElement("button");
+        buyBtn.className = "btn small";
+        buyBtn.textContent = "Buy";
+        buyBtn.disabled = !user;
+        buyBtn.addEventListener("click", () => {
+          if (!user) return;
+          if (user.currency < item.price) {
+            addNotification("You do not have enough RES.");
+            return;
+          }
+          user.currency -= item.price;
+          user.inventory.push(item.id);
+          saveData();
+          addNotification(`You bought ${item.name} for ${formatRes(item.price)}.`);
+          renderAll();
+        });
+        btnRow.appendChild(buyBtn);
+
+        card.appendChild(btnRow);
         catalogGrid.appendChild(card);
       });
     }
 
-    const createNameInput = document.getElementById('createNameInput');
-    const createPriceInput = document.getElementById('createPriceInput');
-    const createClothingButton = document.getElementById('createClothingButton');
-    const createMessage = document.getElementById('createMessage');
-    const createClothingList = document.getElementById('createClothingList');
-
-    createClothingButton.addEventListener('click', () => {
+    function renderCreate() {
       const user = getCurrentUser();
       if (!user) {
-        createMessage.textContent = 'You must be logged in to upload clothing.';
-        createMessage.className = 'error';
-        return;
+        createGuestLock.classList.remove("hidden");
+        createForm.classList.add("hidden");
+      } else {
+        createGuestLock.classList.add("hidden");
+        createForm.classList.remove("hidden");
       }
-      if (user.banned) {
-        createMessage.textContent = 'You are banned and cannot create clothing.';
-        createMessage.className = 'error';
-        return;
-      }
-      const name = createNameInput.value.trim();
-      const price = parseInt(createPriceInput.value, 10);
-      if (!name || isNaN(price) || price <= 0) {
-        createMessage.textContent = 'Enter a valid name and price.';
-        createMessage.className = 'error';
-        return;
-      }
-      const id = db.nextItemId++;
-      db.items[id] = {
-        id,
-        name,
-        rarity: 'none',
-        value: null,
-        price,
-        type: 'clothing',
-        owner: null,
-        creator: db.currentUser,
-        advertised: false
-      };
-      saveData();
-      createMessage.textContent = 'Clothing uploaded. 30% tax will be taken on each sale.';
-      createMessage.className = 'success';
-      createNameInput.value = '';
-      createPriceInput.value = '';
-      renderCatalog();
-      renderStats();
-      renderCreateClothingList();
-    });
+    }
 
-    function renderCreateClothingList() {
+    function renderProfile() {
       const user = getCurrentUser();
-      createClothingList.innerHTML = '';
       if (!user) {
-        createClothingList.innerHTML = '<p class="muted">Log in to see your clothing.</p>';
+        profileGuestLock.classList.remove("hidden");
+        profileContent.classList.add("hidden");
         return;
       }
-      const myClothes = Object.values(db.items).filter(i => i.type === 'clothing' && i.creator === db.currentUser);
-      if (myClothes.length === 0) {
-        createClothingList.innerHTML = '<p class="muted">You have not created any clothing yet.</p>';
-        return;
-      }
-      myClothes.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-          <div class="item-thumb">${itemInitials(item.name)}</div>
-          <div class="item-content">
-            <div class="item-name">${item.name}</div>
-            <div class="item-meta">Price: ${item.price} RES</div>
-            <span class="badge badge-clothing">CLOTHING</span>
-          </div>
-        `;
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-small';
-        btn.textContent = item.advertised ? 'Remove Ad' : 'Advertise';
-        btn.addEventListener('click', () => {
-          item.advertised = !item.advertised;
-          saveData();
-          renderCreateClothingList();
-          renderAds();
-        });
-        div.querySelector('.item-content').appendChild(btn);
-        createClothingList.appendChild(div);
+      profileGuestLock.classList.add("hidden");
+      profileContent.classList.remove("hidden");
+
+      profileAvatarBox.textContent = itemInitials(user.username);
+      profileUsername.textContent = user.username;
+      profileCurrency.textContent = formatRes(user.currency);
+
+      const invIds = user.inventory || [];
+      let totalValue = 0;
+      invIds.forEach(id => {
+        const it = db.items[id];
+        if (it) totalValue += (it.value || 0);
       });
-    }
+      profileTotalValue.textContent = totalValue.toLocaleString();
 
-    const bodyColorInput = document.getElementById('bodyColorInput');
-    const hatInput = document.getElementById('hatInput');
-    const accessoryInput = document.getElementById('accessoryInput');
-    const equippedLimitedInput = document.getElementById('equippedLimitedInput');
-    const saveAvatarButton = document.getElementById('saveAvatarButton');
-    const avatarMessage = document.getElementById('avatarMessage');
-    const avatarGuestNote = document.getElementById('avatarGuestNote');
+      profileFriendsCount.textContent = `${(user.friends||[]).length} Friends`;
+      const tradesCount = db.trades.filter(t => t.from === user.username || t.to === user.username).length;
+      profileTradesCount.textContent = `${tradesCount} Trades`;
 
-    const profileUsername = document.getElementById('profileUsername');
-    const profileNetWorth = document.getElementById('profileNetWorth');
-    const profileItemCount = document.getElementById('profileItemCount');
-    const profileCurrency = document.getElementById('profileCurrency');
-    const profileVerified = document.getElementById('profileVerified');
-    const profileFollowers = document.getElementById('profileFollowers');
-    const profileFollowing = document.getElementById('profileFollowing');
-    const inventoryList = document.getElementById('inventoryList');
+      const filter = inventoryFilter.value;
+      profileInventory.innerHTML = "";
+      invIds.forEach(id => {
+        const it = db.items[id];
+        if (!it) return;
+        if (filter !== "all" && it.type !== filter) return;
 
-    const homeAvatarContainer = document.getElementById('homeAvatarContainer');
-    const profileAvatarContainer = document.getElementById('profileAvatarContainer');
+        const card = document.createElement("div");
+        card.className = "item-card";
 
-    let bodyMesh, hatMesh, accessoryMesh, limitedMesh;
-    let bodyMeshProfile, hatMeshProfile, accessoryMeshProfile, limitedMeshProfile;
+        const thumb = document.createElement("div");
+        thumb.className = "item-thumb";
+        thumb.textContent = itemInitials(it.name);
+        card.appendChild(thumb);
 
-    function initAvatar3D(container, isProfile) {
-      const width = container.clientWidth || 220;
-      const height = container.clientHeight || 220;
-
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
-      camera.position.set(0, 1.5, 4);
-
-      const renderer = new THREE.WebGLRenderer({ antialias: true });
-      renderer.setSize(width, height);
-      renderer.setPixelRatio(window.devicePixelRatio);
-      container.innerHTML = '';
-      container.appendChild(renderer.domElement);
-
-      const light = new THREE.DirectionalLight(0xffffff, 1);
-      light.position.set(3, 5, 2);
-      scene.add(light);
-      scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-
-      const group = new THREE.Group();
-      scene.add(group);
-
-      const bodyGeo = new THREE.BoxGeometry(1, 1.5, 0.5);
-      const bodyMat = new THREE.MeshStandardMaterial({ color: 0x9e9e9e });
-      const body = new THREE.Mesh(bodyGeo, bodyMat);
-      body.position.y = 0.75;
-      group.add(body);
-
-      const headGeo = new THREE.BoxGeometry(0.7, 0.7, 0.7);
-      const headMat = new THREE.MeshStandardMaterial({ color: 0xffe0b2 });
-      const head = new THREE.Mesh(headGeo, headMat);
-      head.position.y = 1.7;
-      group.add(head);
-
-      const legGeo = new THREE.BoxGeometry(0.4, 0.8, 0.4);
-      const legMat = new THREE.MeshStandardMaterial({ color: 0x424242 });
-      const leftLeg = new THREE.Mesh(legGeo, legMat);
-      const rightLeg = new THREE.Mesh(legGeo, legMat);
-      leftLeg.position.set(-0.25, 0.25, 0);
-      rightLeg.position.set(0.25, 0.25, 0);
-      group.add(leftLeg);
-      group.add(rightLeg);
-
-      const armGeo = new THREE.BoxGeometry(0.35, 0.9, 0.35);
-      const armMat = new THREE.MeshStandardMaterial({ color: 0x9e9e9e });
-      const leftArm = new THREE.Mesh(armGeo, armMat);
-      const rightArm = new THREE.Mesh(armGeo, armMat);
-      leftArm.position.set(-0.8, 1.1, 0);
-      rightArm.position.set(0.8, 1.1, 0);
-      group.add(leftArm);
-      group.add(rightArm);
-
-      const hatGeo = new THREE.BoxGeometry(0.9, 0.3, 0.9);
-      const hatMat = new THREE.MeshStandardMaterial({ color: 0x000000 });
-      const hat = new THREE.Mesh(hatGeo, hatMat);
-      hat.position.y = 2.1;
-      group.add(hat);
-
-      const accGeo = new THREE.BoxGeometry(0.9, 0.15, 0.2);
-      const accMat = new THREE.MeshStandardMaterial({ color: 0x00a2ff });
-      const accessory = new THREE.Mesh(accGeo, accMat);
-      accessory.position.set(0, 1.7, 0.4);
-      group.add(accessory);
-
-      const limitedGeo = new THREE.BoxGeometry(0.6, 0.3, 0.6);
-      const limitedMat = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-      const limited = new THREE.Mesh(limitedGeo, limitedMat);
-      limited.position.set(0, 2.3, 0);
-      group.add(limited);
-
-      hat.visible = false;
-      accessory.visible = false;
-      limited.visible = false;
-
-      function animate() {
-        requestAnimationFrame(animate);
-        group.rotation.y += 0.01;
-        renderer.render(scene, camera);
-      }
-      animate();
-
-      if (isProfile) {
-        bodyMeshProfile = body;
-        hatMeshProfile = hat;
-        accessoryMeshProfile = accessory;
-        limitedMeshProfile = limited;
-      } else {
-        bodyMesh = body;
-        hatMesh = hat;
-        accessoryMesh = accessory;
-        limitedMesh = limited;
-      }
-    }
-
-    function applyAvatarToMeshes(avatar, body, hat, accessory, limited) {
-      if (!body || !hat || !accessory || !limited) return;
-      body.material.color.set(avatar.bodyColor || '#9e9e9e');
-
-      if (avatar.hat && avatar.hat !== 'none') {
-        hat.visible = true;
-        if (avatar.hat === 'black') hat.material.color.set('#000000');
-        if (avatar.hat === 'red') hat.material.color.set('#f44336');
-        if (avatar.hat === 'blue') hat.material.color.set('#2196f3');
-      } else {
-        hat.visible = false;
-      }
-
-      if (avatar.accessory && avatar.accessory !== 'none') {
-        accessory.visible = true;
-        accessory.material.color.set('#00a2ff');
-      } else {
-        accessory.visible = false;
-      }
-
-      if (avatar.equippedLimitedId) {
-        const item = db.items[avatar.equippedLimitedId];
-        if (item) {
-          limited.visible = true;
-          limited.material.color.set('#ffd700');
-        } else {
-          limited.visible = false;
+        const nameRow = document.createElement("div");
+        nameRow.className = "item-name";
+        nameRow.textContent = it.name;
+        if (it.type === "limited") {
+          const tag = document.createElement("span");
+          tag.className = "tag-limited";
+          tag.textContent = "LIMITED";
+          nameRow.appendChild(tag);
         }
-      } else {
-        limited.visible = false;
-      }
-    }
+        card.appendChild(nameRow);
 
-    function applyAvatarEverywhere(avatar) {
-      applyAvatarToMeshes(avatar, bodyMesh, hatMesh, accessoryMesh, limitedMesh);
-      applyAvatarToMeshes(avatar, bodyMeshProfile, hatMeshProfile, accessoryMeshProfile, limitedMeshProfile);
-    }
+        const meta = document.createElement("div");
+        meta.className = "item-meta";
+        meta.textContent = `Value: ${it.value}`;
+        card.appendChild(meta);
 
-    const userBrowserList = document.getElementById('userBrowserList');
-    const selectedUserInfo = document.getElementById('selectedUserInfo');
-    const selectedUserActions = document.getElementById('selectedUserActions');
-    const selectedUserInventory = document.getElementById('selectedUserInventory');
-    const followUserButton = document.getElementById('followUserButton');
-    const tradeUserButton = document.getElementById('tradeUserButton');
-
-    let selectedUserKey = null;
-
-    function renderUserBrowser() {
-      const current = getCurrentUser();
-      userBrowserList.innerHTML = '';
-      const users = Object.keys(db.users).sort();
-      users.forEach(uKey => {
-        const u = db.users[uKey];
-        const div = document.createElement('div');
-        div.className = 'user-browser-entry';
-        let label = uKey;
-        if (u.verified) label += ' ✓';
-        if (u.isAdmin) label += ' [admin]';
-        if (current && current.following && current.following.includes(uKey)) label += ' (following)';
-        div.textContent = label;
-        div.addEventListener('click', () => {
-          selectedUserKey = uKey;
-          showSelectedUser();
-        });
-        userBrowserList.appendChild(div);
+        profileInventory.appendChild(card);
       });
     }
 
-    function showSelectedUser() {
-      if (!selectedUserKey) {
-        selectedUserInfo.textContent = 'Select a user to view.';
-        selectedUserActions.style.display = 'none';
-        selectedUserInventory.innerHTML = '';
-        return;
-      }
-      const u = db.users[selectedUserKey];
-      if (!u) return;
-      let html = `<strong>${selectedUserKey}</strong>`;
-      if (u.verified) html += ' <span class="verified-badge">Verified</span>';
-      html += `<br>Followers: ${(u.followers || []).length} • Following: ${(u.following || []).length}`;
-      selectedUserInfo.innerHTML = html;
-      selectedUserActions.style.display = 'block';
-
-      selectedUserInventory.innerHTML = '';
-      const inv = u.inventory || [];
-      if (inv.length === 0) {
-        selectedUserInventory.innerHTML = '<span class="muted">No items.</span>';
-      } else {
-        inv.forEach(id => {
-          const item = db.items[id];
-          if (!item) return;
-          const line = document.createElement('div');
-          line.textContent = `${item.name} (${item.type === 'limited' ? 'Limited' : 'Clothing'})`;
-          selectedUserInventory.appendChild(line);
-        });
-      }
-    }
-
-    followUserButton.addEventListener('click', () => {
-      const current = getCurrentUser();
-      if (!current || !selectedUserKey) return;
-      if (selectedUserKey === db.currentUser) return;
-      const target = db.users[selectedUserKey];
-      current.following = current.following || [];
-      target.followers = target.followers || [];
-      if (!current.following.includes(selectedUserKey)) current.following.push(selectedUserKey);
-      if (!target.followers.includes(db.currentUser)) target.followers.push(db.currentUser);
-      saveData();
-      addNotification(selectedUserKey, `${db.currentUser} followed you.`);
-      renderProfile();
-      renderUserBrowser();
-      showSelectedUser();
-    });
-
-    tradeUserButton.addEventListener('click', () => {
-      if (!selectedUserKey) return;
-      showView('trades');
-      const tradeToUserInput = document.getElementById('tradeToUserInput');
-      tradeToUserInput.value = selectedUserKey;
-    });
-
-    const friendList = document.getElementById('friendList');
-    const chatBox = document.getElementById('chatBox');
-    const chatInput = document.getElementById('chatInput');
-    const chatSendButton = document.getElementById('chatSendButton');
-
-    let selectedFriendKey = null;
-
-    function renderFriends() {
+    function renderTradeWindowLists() {
       const user = getCurrentUser();
-      friendList.innerHTML = '';
-      chatBox.innerHTML = '';
-      if (!user) {
-        friendList.innerHTML = '<p class="muted">Log in to see friends.</p>';
-        return;
-      }
-      user.friends = user.friends || [];
-      if (user.friends.length === 0) {
-        friendList.innerHTML = '<p class="muted">No friends yet. Mutual follows become friends.</p>';
-        return;
-      }
-      user.friends.forEach(fKey => {
-        const div = document.createElement('div');
-        div.className = 'friend-entry';
-        div.innerHTML = `<span>${fKey}</span>`;
-        const btn = document.createElement('button');
-        btn.className = 'btn btn-small';
-        btn.textContent = 'Chat';
-        btn.addEventListener('click', () => {
-          selectedFriendKey = fKey;
-          renderChat();
+      if (!user || !currentTradeTarget) return;
+      const target = db.users[currentTradeTarget];
+      if (!target) return;
+
+      tradeOfferUserLabel.textContent = user.username;
+      tradeRequestUserLabel.textContent = target.username;
+
+      tradeOfferItems.innerHTML = "";
+      tradeRequestItems.innerHTML = "";
+
+      const offerInv = user.inventory || [];
+      const reqInv = target.inventory || [];
+
+      const offerSelectOptions = offerInv.map(id => db.items[id]).filter(Boolean);
+      const reqSelectOptions = reqInv.map(id => db.items[id]).filter(Boolean);
+
+      tradeOfferAddSelect.innerHTML = "";
+      offerSelectOptions.forEach(it => {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        opt.textContent = `${it.name} (${it.value})`;
+        tradeOfferAddSelect.appendChild(opt);
+      });
+
+      tradeRequestAddSelect.innerHTML = "";
+      reqSelectOptions.forEach(it => {
+        const opt = document.createElement("option");
+        opt.value = it.id;
+        opt.textContent = `${it.name} (${it.value})`;
+        tradeRequestAddSelect.appendChild(opt);
+      });
+
+      currentOfferIds.forEach(id => {
+        const it = db.items[id];
+        if (!it) return;
+        const row = document.createElement("div");
+        row.className = "trade-item-row";
+        const left = document.createElement("span");
+        left.textContent = `${it.name} (${it.value})`;
+        const btn = document.createElement("button");
+        btn.className = "btn small secondary";
+        btn.textContent = "Remove";
+        btn.addEventListener("click", () => {
+          currentOfferIds = currentOfferIds.filter(x => x !== id);
+          renderTradeWindowLists();
         });
-        div.appendChild(btn);
-        friendList.appendChild(div);
+        row.appendChild(left);
+        row.appendChild(btn);
+        tradeOfferItems.appendChild(row);
+      });
+
+      currentRequestIds.forEach(id => {
+        const it = db.items[id];
+        if (!it) return;
+        const row = document.createElement("div");
+        row.className = "trade-item-row";
+        const left = document.createElement("span");
+        left.textContent = `${it.name} (${it.value})`;
+        const btn = document.createElement("button");
+        btn.className = "btn small secondary";
+        btn.textContent = "Remove";
+        btn.addEventListener("click", () => {
+          currentRequestIds = currentRequestIds.filter(x => x !== id);
+          renderTradeWindowLists();
+        });
+        row.appendChild(left);
+        row.appendChild(btn);
+        tradeRequestItems.appendChild(row);
+      });
+
+      const offerValItems = currentOfferIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+      const requestValItems = currentRequestIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+
+      const offerBux = parseInt(tradeOfferBuxInput.value, 10) || 0;
+      const requestBux = parseInt(tradeRequestBuxInput.value, 10) || 0;
+
+      const offerTotal = offerValItems + offerBux;
+      const requestTotal = requestValItems + requestBux;
+
+      const offerTotalDiv = document.createElement("div");
+      offerTotalDiv.className = "muted";
+      offerTotalDiv.textContent = `Total Offer Value: ${offerTotal} (Items ${offerValItems} + ${offerBux} RES)`;
+      tradeOfferItems.appendChild(offerTotalDiv);
+
+      const requestTotalDiv = document.createElement("div");
+      requestTotalDiv.className = "muted";
+      requestTotalDiv.textContent = `Total Request Value: ${requestTotal} (Items ${requestValItems} + ${requestBux} RES)`;
+      tradeRequestItems.appendChild(requestTotalDiv);
+
+      tradeOfferTotalLabel.textContent = `Offer: ${offerTotal}`;
+      tradeRequestTotalLabel.textContent = `Request: ${requestTotal}`;
+
+      const diff = offerTotal - requestTotal;
+      const absDiff = Math.abs(diff);
+      let fairness = 100 - Math.min(absDiff / 10, 100);
+      fairness = Math.max(0, Math.min(100, fairness));
+
+      let diffText = "";
+      let diffClass = "";
+      if (diff > 0) {
+        diffText = `You are overpaying by ${absDiff} value.`;
+        diffClass = "pill red";
+      } else if (diff < 0) {
+        diffText = `You are winning by ${absDiff} value.`;
+        diffClass = "pill green";
+      } else {
+        diffText = "Perfectly even trade.";
+        diffClass = "pill";
+      }
+      tradeDiffLabel.innerHTML = `<span class="${diffClass}">${diffText}</span>`;
+
+      tradeFairnessFill.style.width = fairness + "%";
+      if (fairness > 70) {
+        tradeFairnessFill.style.background = "#4ade80";
+        tradeFairnessLabel.textContent = "Fair";
+      } else if (fairness > 40) {
+        tradeFairnessFill.style.background = "#facc15";
+        tradeFairnessLabel.textContent = "Slightly Unfair";
+      } else {
+        tradeFairnessFill.style.background = "#ef4444";
+        tradeFairnessLabel.textContent = "Very Unfair";
+      }
+    }
+
+    function renderTrades() {
+      const user = getCurrentUser();
+      if (!user) {
+        tradeGuestLock.classList.remove("hidden");
+        tradeContent.classList.add("hidden");
+        return;
+      }
+      tradeGuestLock.classList.add("hidden");
+      tradeContent.classList.remove("hidden");
+
+      const incoming = db.trades.filter(t => t.to === user.username).slice().sort((a,b)=>b.createdAt-a.createdAt);
+      const outgoing = db.trades.filter(t => t.from === user.username).slice().sort((a,b)=>b.createdAt-a.createdAt);
+
+      tradeListIncoming.innerHTML = "";
+      tradeListOutgoing.innerHTML = "";
+
+      function renderTradeEntry(t, isIncoming) {
+        const fromUser = db.users[t.from];
+        const toUser = db.users[t.to];
+
+        const offerValItems = (t.offerItemIds || []).reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+        const requestValItems = (t.requestItemIds || []).reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+        const offerTotal = offerValItems + (t.offerBux || 0);
+        const requestTotal = requestValItems + (t.requestBux || 0);
+        const diff = offerTotal - requestTotal;
+        const absDiff = Math.abs(diff);
+
+        const entry = document.createElement("div");
+        entry.className = "trade-list-entry";
+
+        const header = document.createElement("div");
+        header.className = "trade-list-entry-header";
+        const left = document.createElement("div");
+        left.textContent = `${t.from} → ${t.to}`;
+        const right = document.createElement("div");
+        const badge = document.createElement("span");
+        badge.className = isIncoming ? "badge-incoming" : "badge-outgoing";
+        badge.textContent = isIncoming ? "Incoming" : "Outgoing";
+        right.appendChild(badge);
+        header.appendChild(left);
+        header.appendChild(right);
+        entry.appendChild(header);
+
+        const offerNames = (t.offerItemIds || []).map(id => db.items[id]?.name).filter(Boolean).join(", ");
+        const requestNames = (t.requestItemIds || []).map(id => db.items[id]?.name).filter(Boolean).join(", ");
+
+        const offerBuxText = t.offerBux ? ` + ${t.offerBux} RES` : "";
+        const requestBuxText = t.requestBux ? ` + ${t.requestBux} RES` : "";
+
+        const body = document.createElement("div");
+        body.innerHTML = `
+          <div>Offers: ${offerNames || "None"} (Total ${offerTotal})${offerBuxText}</div>
+          <div>Requests: ${requestNames || "None"} (Total ${requestTotal})${requestBuxText}</div>
+        `;
+        entry.appendChild(body);
+
+        const diffSpan = document.createElement("div");
+        diffSpan.style.marginTop = "4px";
+        let diffText = "";
+        let diffClass = "pill";
+        if (diff > 0) {
+          diffText = `${t.from} overpays by ${absDiff}`;
+          diffClass = "pill red";
+        } else if (diff < 0) {
+          diffText = `${t.to} overpays by ${absDiff}`;
+          diffClass = "pill green";
+        } else {
+          diffText = "Even trade";
+        }
+        diffSpan.innerHTML = `<span class="${diffClass}">${diffText}</span>`;
+        entry.appendChild(diffSpan);
+
+        const footer = document.createElement("div");
+        footer.style.marginTop = "4px";
+        const statusSpan = document.createElement("span");
+        statusSpan.className = "muted";
+        statusSpan.textContent = `Status: ${t.status}`;
+        footer.appendChild(statusSpan);
+
+        if (isIncoming && t.status === "pending") {
+          const acceptBtn = document.createElement("button");
+          acceptBtn.className = "btn small";
+          acceptBtn.style.marginLeft = "6px";
+          acceptBtn.textContent = "Accept";
+          acceptBtn.addEventListener("click", () => {
+            const from = db.users[t.from];
+            const to = db.users[t.to];
+            if (!from || !to) return;
+
+            const hasAll = (t.offerItemIds || []).every(id => from.inventory.includes(id)) &&
+                           (t.requestItemIds || []).every(id => to.inventory.includes(id));
+            if (!hasAll) {
+              addNotification("Trade failed: one user no longer owns an item.");
+              t.status = "failed";
+              saveData();
+              renderAll();
+              return;
+            }
+
+            (t.offerItemIds || []).forEach(id => {
+              from.inventory = from.inventory.filter(x => x !== id);
+              to.inventory.push(id);
+            });
+            (t.requestItemIds || []).forEach(id => {
+              to.inventory = to.inventory.filter(x => x !== id);
+              from.inventory.push(id);
+            });
+
+            from.currency -= (t.offerBux || 0);
+            to.currency += (t.offerBux || 0);
+            to.currency -= (t.requestBux || 0);
+            from.currency += (t.requestBux || 0);
+
+            t.status = "accepted";
+            saveData();
+            addNotification(`${t.to} accepted trade from ${t.from}.`);
+            renderAll();
+          });
+          footer.appendChild(acceptBtn);
+
+          const declineBtn = document.createElement("button");
+          declineBtn.className = "btn small secondary";
+          declineBtn.style.marginLeft = "4px";
+          declineBtn.textContent = "Decline";
+          declineBtn.addEventListener("click", () => {
+            t.status = "declined";
+            saveData();
+            renderAll();
+          });
+          footer.appendChild(declineBtn);
+        }
+
+        entry.appendChild(footer);
+        return entry;
+      }
+
+      incoming.forEach(t => {
+        tradeListIncoming.appendChild(renderTradeEntry(t, true));
+      });
+      outgoing.forEach(t => {
+        tradeListOutgoing.appendChild(renderTradeEntry(t, false));
       });
     }
 
-    function ensureFriendsFromFollows() {
-      Object.keys(db.users).forEach(uKey => {
-        const u = db.users[uKey];
-        u.followers = u.followers || [];
-        u.following = u.following || [];
-        u.friends = u.friends || [];
-      });
-      Object.keys(db.users).forEach(uKey => {
-        const u = db.users[uKey];
-        u.following.forEach(other => {
-          const o = db.users[other];
-          if (!o) return;
-          if (o.following && o.following.includes(uKey)) {
-            if (!u.friends.includes(other)) u.friends.push(other);
-            if (!o.friends.includes(uKey)) o.friends.push(uKey);
-          }
-        });
-      });
-      saveData();
+    function renderAdmin() {
+      const user = getCurrentUser();
+      if (!user || user.username !== ADMIN_USERNAME) {
+        adminGuestLock.classList.remove("hidden");
+        adminContent.classList.add("hidden");
+      } else {
+        adminGuestLock.classList.add("hidden");
+        adminContent.classList.remove("hidden");
+      }
     }
 
     function renderChat() {
-      const user = getCurrentUser();
-      chatBox.innerHTML = '';
-      if (!user || !selectedFriendKey) {
-        chatBox.innerHTML = '<div class="muted">Select a friend to chat.</div>';
-        return;
-      }
-      user.messages = user.messages || [];
-      const lines = user.messages.filter(m => m.with === selectedFriendKey);
-      if (lines.length === 0) {
-        chatBox.innerHTML = '<div class="muted">No messages yet.</div>';
-        return;
-      }
-      lines.forEach(m => {
-        const div = document.createElement('div');
-        div.className = 'chat-line';
-        div.innerHTML = `<span>${m.from}:</span> ${m.text}`;
+      chatBox.innerHTML = "";
+      db.chat.forEach(msg => {
+        const div = document.createElement("div");
+        div.innerHTML = `<strong>${msg.from}:</strong> ${msg.text}`;
         chatBox.appendChild(div);
       });
       chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    chatSendButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user || !selectedFriendKey) return;
-      const text = chatInput.value.trim();
-      if (!text) return;
-      const target = db.users[selectedFriendKey];
-      if (!target) return;
-
-      user.messages = user.messages || [];
-      target.messages = target.messages || [];
-
-      user.messages.push({ with: selectedFriendKey, from: db.currentUser, text });
-      target.messages.push({ with: db.currentUser, from: db.currentUser, text });
-
-      addNotification(selectedFriendKey, `${db.currentUser} sent you a message.`);
-      saveData();
-      chatInput.value = '';
-      renderChat();
-    });
-
-    function renderProfile() {
-      const user = getCurrentUser();
-      if (!user) {
-        profileUsername.textContent = 'Guest';
-        profileNetWorth.textContent = '0';
-        profileItemCount.textContent = '0';
-        profileCurrency.textContent = '0';
-        profileVerified.innerHTML = '';
-        profileFollowers.textContent = '0';
-        profileFollowing.textContent = '0';
-        inventoryList.innerHTML = '<p class="muted">Log in to see and own items.</p>';
-        avatarMessage.textContent = 'You are not logged in.';
-        avatarMessage.className = 'error';
-        avatarGuestNote.textContent = 'Guests cannot save avatar changes.';
-        equippedLimitedInput.innerHTML = '<option value="">None</option>';
-        applyAvatarEverywhere({ bodyColor: '#9e9e9e', hat: 'none', accessory: 'none', equippedLimitedId: null });
-        renderUserBrowser();
-        renderFriends();
-        return;
+    function renderNotifications() {
+      notifList.innerHTML = "";
+      db.notifications.forEach(n => {
+        const div = document.createElement("div");
+        div.className = "notif-entry";
+        div.textContent = n.text;
+        notifList.appendChild(div);
+      });
+      const count = db.notifications.length;
+      if (count > 0) {
+        notifCount.textContent = count;
+        notifCount.classList.remove("hidden");
+      } else {
+        notifCount.classList.add("hidden");
       }
+    }
 
-      profileUsername.textContent = db.currentUser;
-      profileVerified.innerHTML = user.verified ? '<span class="verified-badge">Verified</span>' : '';
-
-      let netWorth = 0;
-      user.inventory.forEach(id => {
-        const item = db.items[id];
-        if (item && item.value) netWorth += item.value;
-      });
-      profileNetWorth.textContent = netWorth;
-      profileItemCount.textContent = user.inventory.length;
-      profileCurrency.textContent = user.currency || 0;
-      profileFollowers.textContent = (user.followers || []).length;
-      profileFollowing.textContent = (user.following || []).length;
-
-      bodyColorInput.value = user.avatar.bodyColor || '#9e9e9e';
-      hatInput.value = user.avatar.hat || 'none';
-      accessoryInput.value = user.avatar.accessory || 'none';
-
-      equippedLimitedInput.innerHTML = '<option value="">None</option>';
-      user.inventory.forEach(id => {
-        const item = db.items[id];
-        if (!item || !item.value) return;
-        const opt = document.createElement('option');
-        opt.value = id;
-        opt.textContent = item.name + ' (Value ' + item.value + ')';
-        equippedLimitedInput.appendChild(opt);
-      });
-      if (user.avatar.equippedLimitedId) {
-        equippedLimitedInput.value = user.avatar.equippedLimitedId;
-      }
-
-      applyAvatarEverywhere(user.avatar);
-
-      inventoryList.innerHTML = '';
-      user.inventory.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        const badgeClass = item.type === 'limited' ? rarityBadgeClass(item.rarity) : 'badge badge-clothing';
-        const badgeText = item.type === 'limited' ? item.rarity.toUpperCase() : 'CLOTHING';
-        const valueLine = item.value ? `<div class="item-meta">Value: ${item.value}</div>` : '';
-        card.innerHTML = `
-          <div class="item-thumb">${itemInitials(item.name)}</div>
-          <div class="item-content">
-            <div class="item-name">${item.name}</div>
-            <div class="item-meta">Price: ${item.price} RES</div>
-            ${valueLine}
-            <span class="${badgeClass}">${badgeText}</span>
-          </div>
-        `;
-        inventoryList.appendChild(card);
-      });
-
-      avatarMessage.textContent = '';
-      avatarMessage.className = '';
-      avatarGuestNote.textContent = '';
-
-      ensureFriendsFromFollows();
-      renderUserBrowser();
+    function renderAll() {
+      renderAuth();
+      renderStats();
       renderFriends();
+      renderHome();
+      renderCatalog();
+      renderCreate();
+      renderProfile();
+      renderTrades();
+      renderAdmin();
       renderChat();
+      renderNotifications();
     }
 
-    saveAvatarButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user) {
-        avatarMessage.textContent = 'You must be logged in to save avatar.';
-        avatarMessage.className = 'error';
+    loginBtn.addEventListener("click", () => {
+      const u = authUsername.value.trim();
+      const p = authPassword.value;
+      if (!u || !p) {
+        authMessage.textContent = "Enter username and password.";
         return;
       }
-      if (user.banned) {
-        avatarMessage.textContent = 'You are banned and cannot change avatar.';
-        avatarMessage.className = 'error';
+      const user = db.users[u];
+      if (!user || user.password !== p) {
+        authMessage.textContent = "Invalid credentials.";
         return;
       }
-      user.avatar.bodyColor = bodyColorInput.value;
-      user.avatar.hat = hatInput.value;
-      user.avatar.accessory = accessoryInput.value;
-      const eqId = equippedLimitedInput.value ? parseInt(equippedLimitedInput.value, 10) : null;
-      user.avatar.equippedLimitedId = eqId;
-      applyAvatarEverywhere(user.avatar);
+      db.currentUser = u;
+      authMessage.textContent = "";
       saveData();
-      avatarMessage.textContent = 'Avatar saved.';
-      avatarMessage.className = 'success';
-      renderHomeSummary();
+      addNotification(`Logged in as ${u}.`);
+      renderAll();
     });
 
-    const tradeToUserInput = document.getElementById('tradeToUserInput');
-    const tradeOfferAddInput = document.getElementById('tradeOfferAddInput');
-    const tradeRequestAddInput = document.getElementById('tradeRequestAddInput');
-    const tradeOfferAddButton = document.getElementById('tradeOfferAddButton');
-    const tradeRequestAddButton = document.getElementById('tradeRequestAddButton');
-    const tradeOfferItems = document.getElementById('tradeOfferItems');
-    const tradeRequestItems = document.getElementById('tradeRequestItems');
-    const createTradeButton = document.getElementById('createTradeButton');
-    const tradeMessage = document.getElementById('tradeMessage');
-    const tradeList = document.getElementById('tradeList');
-
-    let currentOfferIds = [];
-    let currentRequestIds = [];
-
-    function renderTrades() {
-      const user = getCurrentUser();
-
-      tradeToUserInput.innerHTML = '';
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = 'Select user';
-      tradeToUserInput.appendChild(placeholder);
-
-      Object.keys(db.users).forEach(username => {
-        if (db.currentUser && username === db.currentUser) return;
-        const u = db.users[username];
-        if (u.banned) return;
-        const opt = document.createElement('option');
-        opt.value = username;
-        opt.textContent = username;
-        tradeToUserInput.appendChild(opt);
-      });
-
-      tradeOfferAddInput.innerHTML = '';
-      const offerPlaceholder = document.createElement('option');
-      offerPlaceholder.value = '';
-      offerPlaceholder.textContent = 'Select your limited';
-      tradeOfferAddInput.appendChild(offerPlaceholder);
-
-      tradeRequestAddInput.innerHTML = '';
-      const reqPlaceholder = document.createElement('option');
-      reqPlaceholder.value = '';
-      reqPlaceholder.textContent = 'Select requested limited';
-      tradeRequestAddInput.appendChild(reqPlaceholder);
-
-      if (user) {
-        user.inventory.forEach(id => {
-          const item = db.items[id];
-          if (!item || !item.value) return;
-          const opt = document.createElement('option');
-          opt.value = id;
-          opt.textContent = `${item.name} (Value ${item.value})`;
-          tradeOfferAddInput.appendChild(opt);
-        });
-      }
-
-      Object.values(db.items).forEach(item => {
-        if (!item.value) return;
-        const opt = document.createElement('option');
-        opt.value = item.id;
-        opt.textContent = `${item.name} (Value ${item.value})`;
-        tradeRequestAddInput.appendChild(opt);
-      });
-
-      renderTradeWindowLists();
-
-      tradeList.innerHTML = '';
-      if (!user) {
-        tradeList.innerHTML = '<p class="muted">Log in to view your trades.</p>';
+    signupBtn.addEventListener("click", () => {
+      const u = authUsername.value.trim();
+      const p = authPassword.value;
+      if (!u || !p) {
+        authMessage.textContent = "Enter username and password.";
         return;
       }
-
-      const myTrades = db.trades.filter(t => t.from === db.currentUser || t.to === db.currentUser);
-      if (myTrades.length === 0) {
-        tradeList.innerHTML = '<p class="muted">No trades yet.</p>';
+      if (db.users[u]) {
+        authMessage.textContent = "Username already taken.";
         return;
       }
+      db.users[u] = {
+        username: u,
+        password: p,
+        currency: 1000,
+        inventory: [],
+        friends: [],
+        createdAt: Date.now()
+      };
+      db.currentUser = u;
+      authMessage.textContent = "";
+      saveData();
+      addNotification(`Welcome, ${u}! You received 1,000 RES.`);
+      renderAll();
+    });
 
-      myTrades.forEach((t, index) => {
-        const div = document.createElement('div');
-        div.className = 'trade-entry';
-        const statusText = t.status || 'pending';
-        const youAreReceiver = t.to === db.currentUser;
+    logoutBtn.addEventListener("click", () => {
+      db.currentUser = null;
+      saveData();
+      renderAll();
+    });
 
-        const offerNames = t.offerItemIds.map(id => db.items[id]?.name || 'Unknown').join(', ');
-        const requestNames = t.requestItemIds.map(id => db.items[id]?.name || 'Unknown').join(', ');
+    authBtn.addEventListener("click", () => {
+      showView("homeView");
+    });
 
-        const offerVal = t.offerItemIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
-        const reqVal = t.requestItemIds.reduce((sum, id) => sum + (db.items[id]?.value || 0), 0);
+    themeToggleBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+    });
 
-        div.innerHTML = `
-          <div><strong>${t.from}</strong> → <strong>${t.to}</strong> (${statusText})</div>
-          <div>Offers: ${offerNames || 'None'} (Total Value ${offerVal})</div>
-          <div>Requests: ${requestNames || 'None'} (Total Value ${reqVal})</div>
-          <div class="muted">${new Date(t.createdAt).toLocaleString()}</div>
-        `;
-
-        if (statusText === 'pending' && youAreReceiver) {
-          const actions = document.createElement('div');
-          actions.className = 'trade-actions';
-
-          const acceptBtn = document.createElement('button');
-          acceptBtn.className = 'btn btn-small';
-          acceptBtn.textContent = 'Accept';
-          acceptBtn.addEventListener('click', () => {
-            const user = getCurrentUser();
-            if (!user || user.banned) {
-              alert('You are banned or not logged in.');
-              return;
-            }
-            const fromUser = db.users[t.from];
-            const toUser = db.users[t.to];
-            if (!fromUser || !toUser) return;
-
-            t.offerItemIds.forEach(id => {
-              fromUser.inventory = fromUser.inventory.filter(x => x !== id);
-              toUser.inventory.push(id);
-              if (db.items[id]) db.items[id].owner = t.to;
-            });
-
-            t.requestItemIds.forEach(id => {
-              toUser.inventory = toUser.inventory.filter(x => x !== id);
-              fromUser.inventory.push(id);
-              if (db.items[id]) db.items[id].owner = t.from;
-            });
-
-            t.status = 'accepted';
-            saveData();
-            addNotification(t.from, `${t.to} accepted your trade.`);
-            renderTrades();
-            renderProfile();
-            renderHomeSummary();
-          });
-
-          const declineBtn = document.createElement('button');
-          declineBtn.className = 'btn btn-small';
-          declineBtn.style.background = '#ef4444';
-          declineBtn.textContent = 'Decline';
-          declineBtn.addEventListener('click', () => {
-            t.status = 'declined';
-            saveData();
-            addNotification(t.from, `${t.to} declined your trade.`);
-            renderTrades();
-          });
-
-          const counterBtn = document.createElement('button');
-          counterBtn.className = 'btn btn-small';
-          counterBtn.style.background = '#f59e0b';
-          counterBtn.textContent = 'Counter';
-          counterBtn.addEventListener('click', () => {
-            const user = getCurrentUser();
-            if (!user || user.banned) {
-              alert('You are banned or not logged in.');
-              return;
-            }
-            currentOfferIds = [...t.requestItemIds];
-            currentRequestIds = [...t.offerItemIds];
-            showView('trades');
-            tradeToUserInput.value = t.from;
-            renderTradeWindowLists();
-          });
-
-          actions.appendChild(acceptBtn);
-          actions.appendChild(declineBtn);
-          actions.appendChild(counterBtn);
-          div.appendChild(actions);
-        }
-
-        tradeList.appendChild(div);
-      });
-    }
-
-    function renderTradeWindowLists() {
-      tradeOfferItems.innerHTML = '';
-      tradeRequestItems.innerHTML = '';
-
-      currentOfferIds.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        const div = document.createElement('div');
-        div.className = 'trade-window-item';
-        div.innerHTML = `<span>${item.name}</span><button class="btn btn-small">X</button>`;
-        div.querySelector('button').addEventListener('click', () => {
-          currentOfferIds = currentOfferIds.filter(x => x !== id);
-          renderTradeWindowLists();
-        });
-        tradeOfferItems.appendChild(div);
-      });
-
-      currentRequestIds.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        const div = document.createElement('div');
-        div.className = 'trade-window-item';
-        div.innerHTML = `<span>${item.name}</span><button class="btn btn-small">X</button>`;
-        div.querySelector('button').addEventListener('click', () => {
-          currentRequestIds = currentRequestIds.filter(x => x !== id);
-          renderTradeWindowLists();
-        });
-        tradeRequestItems.appendChild(div);
-      });
-    }
-
-    tradeOfferAddButton.addEventListener('click', () => {
+    createItemBtn.addEventListener("click", () => {
       const user = getCurrentUser();
       if (!user) return;
-      const id = parseInt(tradeOfferAddInput.value, 10);
-      if (isNaN(id)) return;
-      if (!user.inventory.includes(id)) {
-        alert('You do not own that item.');
-        return;
-      }
-      const item = db.items[id];
-      if (!item || !item.value) {
-        alert('Item must be a limited with value.');
-        return;
-      }
-      if (!currentOfferIds.includes(id)) currentOfferIds.push(id);
-      renderTradeWindowLists();
-    });
-
-    tradeRequestAddButton.addEventListener('click', () => {
-      const id = parseInt(tradeRequestAddInput.value, 10);
-      if (isNaN(id)) return;
-      const item = db.items[id];
-      if (!item || !item.value) {
-        alert('Item must be a limited with value.');
-        return;
-      }
-      if (!currentRequestIds.includes(id)) currentRequestIds.push(id);
-      renderTradeWindowLists();
-    });
-
-    createTradeButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user) {
-        tradeMessage.textContent = 'You must be logged in to create trades.';
-        tradeMessage.className = 'error';
-        return;
-      }
-      if (user.banned) {
-        tradeMessage.textContent = 'You are banned and cannot trade.';
-        tradeMessage.className = 'error';
-        return;
-      }
-
-      const toUser = tradeToUserInput.value;
-      if (!toUser) {
-        tradeMessage.textContent = 'Select a user to trade with.';
-        tradeMessage.className = 'error';
-        return;
-      }
-      if (currentOfferIds.length === 0 && currentRequestIds.length === 0) {
-        tradeMessage.textContent = 'Add at least one item to offer or request.';
-        tradeMessage.className = 'error';
-        return;
-      }
-
-      for (const id of currentOfferIds) {
-        if (!user.inventory.includes(id)) {
-          tradeMessage.textContent = 'You do not own one of the offer items.';
-          tradeMessage.className = 'error';
-          return;
-        }
-      }
-
-      db.trades.push({
-        from: db.currentUser,
-        to: toUser,
-        offerItemIds: [...currentOfferIds],
-        requestItemIds: [...currentRequestIds],
-        createdAt: Date.now(),
-        status: 'pending'
-      });
-      saveData();
-      addNotification(toUser, `${db.currentUser} sent you a trade.`);
-      tradeMessage.textContent = 'Trade sent.';
-      tradeMessage.className = 'success';
-      currentOfferIds = [];
-      currentRequestIds = [];
-      renderTradeWindowLists();
-      renderTrades();
-      renderStats();
-    });
-
-    const adminUserSelect = document.getElementById('adminUserSelect');
-    const adminCurrencyInput = document.getElementById('adminCurrencyInput');
-    const adminSetCurrencyButton = document.getElementById('adminSetCurrencyButton');
-    const adminBanButton = document.getElementById('adminBanButton');
-    const adminUnbanButton = document.getElementById('adminUnbanButton');
-    const adminItemNameInput = document.getElementById('adminItemNameInput');
-    const adminItemRarityInput = document.getElementById('adminItemRarityInput');
-    const adminItemValueInput = document.getElementById('adminItemValueInput');
-    const adminItemPriceInput = document.getElementById('adminItemPriceInput');
-    const adminCreateLimitedButton = document.getElementById('adminCreateLimitedButton');
-    const adminMessage = document.getElementById('adminMessage');
-    const adminWarning = document.getElementById('adminWarning');
-
-    function renderAdminPanel() {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) {
-        adminWarning.textContent = 'You are not an admin. Log in as "roblox owner admin" to use this panel.';
-        adminUserSelect.innerHTML = '';
-        return;
-      }
-      adminWarning.textContent = '';
-
-      adminUserSelect.innerHTML = '';
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = 'Select user';
-      adminUserSelect.appendChild(placeholder);
-
-      Object.keys(db.users).forEach(username => {
-        const opt = document.createElement('option');
-        opt.value = username;
-        const u = db.users[username];
-        let label = username;
-        if (u.banned) label += ' (banned)';
-        if (u.isAdmin) label += ' [admin]';
-        opt.textContent = label;
-        adminUserSelect.appendChild(opt);
-      });
-    }
-
-    adminSetCurrencyButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) return;
-      const target = adminUserSelect.value;
-      if (!target) {
-        adminMessage.textContent = 'Select a user.';
-        adminMessage.className = 'error';
-        return;
-      }
-      const amount = parseInt(adminCurrencyInput.value, 10);
-      if (isNaN(amount)) {
-        adminMessage.textContent = 'Enter a valid amount.';
-        adminMessage.className = 'error';
-        return;
-      }
-      db.users[target].currency = amount;
-      saveData();
-      adminMessage.textContent = 'Currency updated for ' + target;
-      adminMessage.className = 'success';
-      renderProfile();
-      renderHomeSummary();
-    });
-
-    adminBanButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) return;
-      const target = adminUserSelect.value;
-      if (!target) {
-        adminMessage.textContent = 'Select a user.';
-        adminMessage.className = 'error';
-        return;
-      }
-      if (target === db.currentUser) {
-        adminMessage.textContent = 'You cannot ban yourself.';
-        adminMessage.className = 'error';
-        return;
-      }
-      db.users[target].banned = true;
-      saveData();
-      adminMessage.textContent = 'User banned: ' + target;
-      adminMessage.className = 'success';
-      renderAdminPanel();
-    });
-
-    adminUnbanButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) return;
-      const target = adminUserSelect.value;
-      if (!target) {
-        adminMessage.textContent = 'Select a user.';
-        adminMessage.className = 'error';
-        return;
-      }
-      db.users[target].banned = false;
-      saveData();
-      adminMessage.textContent = 'User unbanned: ' + target;
-      adminMessage.className = 'success';
-      renderAdminPanel();
-    });
-
-    adminCreateLimitedButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user || !user.isAdmin) return;
-      const name = adminItemNameInput.value.trim();
-      const rarity = adminItemRarityInput.value;
-      const value = parseInt(adminItemValueInput.value, 10);
-      const price = parseInt(adminItemPriceInput.value, 10);
-      if (!name || isNaN(value) || value <= 0 || isNaN(price) || price <= 0) {
-        adminMessage.textContent = 'Enter valid name, value, and price.';
-        adminMessage.className = 'error';
+      const name = createName.value.trim();
+      const type = createType.value;
+      const price = parseInt(createPrice.value, 10) || 0;
+      const value = parseInt(createValue.value, 10) || 0;
+      if (!name) {
+        createMessage.textContent = "Enter a name.";
         return;
       }
       const id = db.nextItemId++;
       db.items[id] = {
         id,
         name,
-        rarity,
-        value,
+        type,
         price,
-        type: 'limited',
-        owner: null,
-        creator: ADMIN_USERNAME.toLowerCase(),
-        advertised: false
+        value,
+        creator: user.username
       };
       saveData();
-      adminMessage.textContent = 'Limited created with ID ' + id;
-      adminMessage.className = 'success';
-      adminItemNameInput.value = '';
-      adminItemValueInput.value = '';
-      adminItemPriceInput.value = '';
-      renderCatalog();
-      renderStats();
+      createMessage.textContent = `Created item #${id} (${name}).`;
+      createName.value = "";
+      renderAll();
     });
 
-    const notifBell = document.getElementById('notifBell');
-    const notifPanel = document.getElementById('notifPanel');
-    const notifList = document.getElementById('notifList');
-    const notifCount = document.getElementById('notifCount');
-    const notifClearButton = document.getElementById('notifClearButton');
+    inventoryFilter.addEventListener("change", renderProfile);
+    catalogSort.addEventListener("change", renderCatalog);
+    catalogFilter.addEventListener("change", renderCatalog);
 
-    function addNotification(usernameKey, text) {
-      const u = db.users[usernameKey];
-      if (!u) return;
-      u.notifications = u.notifications || [];
-      u.notifications.push({ text, time: Date.now() });
-      saveData();
-      renderNotifications();
-    }
-
-    function renderNotifications() {
-      const user = getCurrentUser();
-      notifList.innerHTML = '';
-      if (!user) {
-        notifCount.style.display = 'none';
-        return;
-      }
-      user.notifications = user.notifications || [];
-      if (user.notifications.length === 0) {
-        notifList.innerHTML = '<div class="muted">No notifications.</div>';
-        notifCount.style.display = 'none';
-        return;
-      }
-      user.notifications.slice().reverse().forEach(n => {
-        const div = document.createElement('div');
-        div.className = 'notif-item';
-        div.innerHTML = `<div>${n.text}</div><div class="muted">${new Date(n.time).toLocaleString()}</div>`;
-        notifList.appendChild(div);
-      });
-      notifCount.textContent = user.notifications.length;
-      notifCount.style.display = 'inline-block';
-    }
-
-    notifBell.addEventListener('click', () => {
-      notifPanel.style.display = notifPanel.style.display === 'none' ? 'block' : 'none';
-    });
-
-    notifClearButton.addEventListener('click', () => {
+    openTradeWindowBtn.addEventListener("click", () => {
       const user = getCurrentUser();
       if (!user) return;
-      user.notifications = [];
+      const targetName = tradeTargetUser.value.trim();
+      if (!targetName) {
+        tradeMessage.textContent = "Enter a username to trade with.";
+        return;
+      }
+      if (!db.users[targetName]) {
+        tradeMessage.textContent = "User not found.";
+        return;
+      }
+      if (targetName === user.username) {
+        tradeMessage.textContent = "You cannot trade with yourself.";
+        return;
+      }
+      currentTradeTarget = targetName;
+      currentOfferIds = [];
+      currentRequestIds = [];
+      tradeOfferBuxInput.value = 0;
+      tradeRequestBuxInput.value = 0;
+      tradeWindow.classList.remove("hidden");
+      tradeMessage.textContent = "";
+      renderTradeWindowLists();
+    });
+
+    closeTradeWindowBtn.addEventListener("click", () => {
+      tradeWindow.classList.add("hidden");
+      currentTradeTarget = null;
+    });
+
+    tradeOfferAddBtn.addEventListener("click", () => {
+      const id = parseInt(tradeOfferAddSelect.value, 10);
+      if (!id) return;
+      if (!currentOfferIds.includes(id)) currentOfferIds.push(id);
+      renderTradeWindowLists();
+    });
+
+    tradeRequestAddBtn.addEventListener("click", () => {
+      const id = parseInt(tradeRequestAddSelect.value, 10);
+      if (!id) return;
+      if (!currentRequestIds.includes(id)) currentRequestIds.push(id);
+      renderTradeWindowLists();
+    });
+
+    tradeOfferBuxInput.addEventListener("input", renderTradeWindowLists);
+    tradeRequestBuxInput.addEventListener("input", renderTradeWindowLists);
+
+    createTradeBtn.addEventListener("click", () => {
+      const user = getCurrentUser();
+      if (!user || !currentTradeTarget) return;
+      const toUser = currentTradeTarget;
+      const target = db.users[toUser];
+      if (!target) return;
+
+      const offerBux = parseInt(tradeOfferBuxInput.value, 10) || 0;
+      const requestBux = parseInt(tradeRequestBuxInput.value, 10) || 0;
+
+      if (offerBux < 0 || requestBux < 0) {
+        tradeMessage.textContent = "RES Bux cannot be negative.";
+        tradeMessage.className = "error";
+        return;
+      }
+      if (offerBux > user.currency) {
+        tradeMessage.textContent = "You do not have enough RES Bux.";
+        tradeMessage.className = "error";
+        return;
+      }
+
+      const trade = {
+        id: Date.now() + Math.random(),
+        from: user.username,
+        to: toUser,
+        offerItemIds: [...currentOfferIds],
+        requestItemIds: [...currentRequestIds],
+        offerBux,
+        requestBux,
+        createdAt: Date.now(),
+        status: "pending"
+      };
+      db.trades.push(trade);
+      saveData();
+      addNotification(`Trade sent to ${toUser}.`);
+      tradeMessage.textContent = "Trade sent.";
+      tradeMessage.className = "success";
+      tradeWindow.classList.add("hidden");
+      currentTradeTarget = null;
+      renderAll();
+    });
+
+    adminGiveBtn.addEventListener("click", () => {
+      const user = getCurrentUser();
+      if (!user || user.username !== ADMIN_USERNAME) return;
+      const targetName = adminGiveUser.value.trim();
+      const amt = parseInt(adminGiveAmount.value, 10) || 0;
+      const target = db.users[targetName];
+      if (!target) {
+        adminMessage.textContent = "User not found.";
+        return;
+      }
+      target.currency += amt;
+      saveData();
+      adminMessage.textContent = `Gave ${formatRes(amt)} to ${targetName}.`;
+      renderAll();
+    });
+
+    adminDeleteItemBtn.addEventListener("click", () => {
+      const user = getCurrentUser();
+      if (!user || user.username !== ADMIN_USERNAME) return;
+      const id = parseInt(adminDeleteItemId.value, 10);
+      if (!db.items[id]) {
+        adminMessage.textContent = "Item not found.";
+        return;
+      }
+      if (!confirm("Are you sure you want to delete this item?")) return;
+      delete db.items[id];
+      Object.values(db.users).forEach(u => {
+        u.inventory = (u.inventory || []).filter(x => x !== id);
+      });
+      saveData();
+      adminMessage.textContent = `Deleted item #${id}.`;
+      renderAll();
+    });
+
+    chatSendBtn.addEventListener("click", () => {
+      const user = getCurrentUser();
+      const text = chatInput.value.trim();
+      if (!text) return;
+      const from = user ? user.username : "Guest";
+      addChatMessage(from, text);
+      chatInput.value = "";
+    });
+
+    chatInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") chatSendBtn.click();
+    });
+
+    notifBell.addEventListener("click", () => {
+      db.notifications = [];
       saveData();
       renderNotifications();
     });
 
-    function init() {
-      applyTheme();
-      initAvatar3D(homeAvatarContainer, false);
-      initAvatar3D(profileAvatarContainer, true);
-      renderStats();
-      renderCatalog();
-      renderProfile();
-      renderTrades();
-      renderHomeSummary();
-      updateGuestLocks();
-      updateAdminNavVisibility();
-      renderNotifications();
-    }
+    globalSearchInput.addEventListener("keydown", e => {
+      if (e.key !== "Enter") return;
+      const q = globalSearchInput.value.trim().toLowerCase();
+      if (!q) return;
+      const userMatch = Object.values(db.users).find(u => u.username.toLowerCase() === q);
+      if (userMatch) {
+        showView("profileView");
+        db.currentUser = userMatch.username;
+        saveData();
+        renderAll();
+        return;
+      }
+      const itemMatch = Object.values(db.items).find(i => i.name.toLowerCase().includes(q));
+      if (itemMatch) {
+        showView("catalogView");
+        renderCatalog();
+        addNotification(`Found item: ${itemMatch.name}`);
+        return;
+      }
+      addNotification("No user or item found for that search.");
+    });
 
-    window.addEventListener('load', init);
+    loadData();
+    ensureDemoData();
+    renderAll();
   </script>
 </body>
 </html>
