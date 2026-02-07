@@ -2,58 +2,141 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>LokBlox – Classic Economy Revival</title>
+  <title>RES – Roblox Economy Revival</title>
+  <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
   <style>
+    :root {
+      --bg: #f2f2f2;
+      --bg-card: #ffffff;
+      --bg-card-soft: #fafafa;
+      --border-soft: #e0e0e0;
+      --text-main: #333;
+      --text-muted: #777;
+      --accent: #00a2ff;
+      --accent-soft: #e3f2fd;
+      --shadow-soft: 0 2px 6px rgba(0,0,0,0.08);
+      --nav-bg: #ffffff;
+      --nav-border: #e0e0e0;
+      --nav-text: #333;
+      --search-bg: #f3f4f6;
+    }
+    body.dark {
+      --bg: #111827;
+      --bg-card: #1f2933;
+      --bg-card-soft: #111827;
+      --border-soft: #374151;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --accent: #3b82f6;
+      --accent-soft: #1d4ed8;
+      --shadow-soft: 0 2px 10px rgba(0,0,0,0.6);
+      --nav-bg: #111827;
+      --nav-border: #1f2933;
+      --nav-text: #e5e7eb;
+      --search-bg: #1f2933;
+    }
+
     body {
       margin: 0;
       font-family: "Roboto", "Arial", sans-serif;
-      background: #f2f2f2;
-      color: #333;
+      background: var(--bg);
+      color: var(--text-main);
+      transition: background 0.2s, color 0.2s;
     }
 
-    /* Top Navigation */
+    /* Top Navigation – 2017 Roblox style */
     .top-bar {
-      background: #ffffff;
-      border-bottom: 2px solid #e0e0e0;
-      padding: 12px 20px;
+      background: var(--nav-bg);
+      border-bottom: 1px solid var(--nav-border);
+      padding: 8px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .top-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
     }
 
     .logo-text {
-      font-size: 26px;
-      font-weight: bold;
-      color: #00a2ff;
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: 1px;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 12px;
     }
 
     .nav-links a {
-      color: #555;
-      margin-left: 20px;
+      color: var(--nav-text);
       text-decoration: none;
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 500;
       cursor: pointer;
+      padding: 4px 6px;
+      border-radius: 4px;
     }
 
     .nav-links a:hover {
-      color: #00a2ff;
+      background: var(--bg-card-soft);
+      color: var(--accent);
     }
 
-    .nav-right {
+    .top-center {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      background: var(--search-bg);
+      border-radius: 999px;
+      padding: 4px 10px;
+      border: 1px solid var(--border-soft);
+      max-width: 360px;
+      width: 100%;
+    }
+
+    .search-box input {
+      border: none;
+      background: transparent;
+      outline: none;
+      flex: 1;
+      font-size: 13px;
+      color: var(--text-main);
+    }
+
+    .search-icon {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-right: 6px;
+    }
+
+    .top-right {
       display: flex;
       align-items: center;
       gap: 10px;
-      font-size: 14px;
+      font-size: 13px;
     }
 
     .nav-username {
       font-weight: 500;
-      color: #333;
+      color: var(--text-main);
     }
 
     .nav-btn {
-      background: #00a2ff;
+      background: var(--accent);
       color: #fff;
       border: none;
       padding: 6px 10px;
@@ -63,820 +146,93 @@
     }
 
     .nav-btn:hover {
-      background: #0088d1;
+      filter: brightness(0.9);
     }
 
     /* Layout */
     .container {
-      max-width: 1100px;
-      margin: 30px auto;
+      max-width: 1200px;
+      margin: 20px auto 40px;
       display: flex;
-      gap: 20px;
+      gap: 16px;
+      padding: 0 12px;
     }
 
-    .column {
+    .column-left {
+      width: 260px;
+      flex-shrink: 0;
+    }
+
+    .column-main {
       flex: 1;
     }
 
-    .column-wide {
-      flex: 2;
+    .column-right {
+      width: 260px;
+      flex-shrink: 0;
     }
 
     /* Cards */
     .panel {
-      background: #ffffff;
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-      margin-bottom: 20px;
+      background: var(--bg-card);
+      border-radius: 6px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-soft);
+      margin-bottom: 14px;
+      border: 1px solid var(--border-soft);
     }
 
     .panel h2 {
-      margin: 0 0 12px 0;
-      font-size: 20px;
-      color: #00a2ff;
-      border-bottom: 1px solid #e0e0e0;
+      margin: 0 0 10px 0;
+      font-size: 18px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--border-soft);
       padding-bottom: 6px;
     }
 
     .panel h3 {
-      margin: 10px 0 6px 0;
-      font-size: 16px;
-      color: #333;
+      margin: 8px 0 6px 0;
+      font-size: 15px;
+      color: var(--text-main);
     }
 
     .btn {
       display: inline-block;
-      background: #00a2ff;
+      background: var(--accent);
       color: #fff;
-      padding: 8px 14px;
-      font-size: 14px;
+      padding: 7px 12px;
+      font-size: 13px;
       text-decoration: none;
-      border-radius: 6px;
+      border-radius: 4px;
       font-weight: 500;
       border: none;
       cursor: pointer;
     }
 
     .btn:hover {
-      background: #0088d1;
+      filter: brightness(0.9);
+    }
+
+    .btn-disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     .input {
       width: 100%;
-      padding: 8px;
-      margin: 4px 0 10px 0;
+      padding: 7px;
+      margin: 4px 0 8px 0;
       border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 14px;
+      border: 1px solid var(--border-soft);
+      font-size: 13px;
       box-sizing: border-box;
+      background: var(--bg-card-soft);
+      color: var(--text-main);
     }
 
     .select {
       width: 100%;
-      padding: 8px;
-      margin: 4px 0 10px 0;
+      padding: 7px;
+      margin: 4px 0 8px 0;
       border-radius: 4px;
-      border: 1px solid #ccc;
-      font-size: 14px;
-      box-sizing: border-box;
-    }
-
-    .label {
-      font-size: 13px;
-      font-weight: 500;
-      margin-top: 6px;
-      display: block;
-    }
-
-    .footer {
-      text-align: center;
-      font-size: 13px;
-      color: #777;
-      padding: 30px 0;
-    }
-
-    /* Avatar */
-    .avatar-preview {
-      width: 120px;
-      height: 160px;
-      border-radius: 8px;
-      background: #ddd;
-      margin-bottom: 10px;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid #ccc;
-    }
-
-    .avatar-body {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 70px;
-      height: 100px;
-      border-radius: 10px;
-      background: #4caf50;
-    }
-
-    .avatar-head {
-      position: absolute;
-      bottom: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: #ffebc1;
-      border: 2px solid rgba(0,0,0,0.1);
-    }
-
-    .avatar-hat {
-      position: absolute;
-      bottom: 140px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 20px;
-      border-radius: 4px 4px 0 0;
-      background: #000;
-      display: none;
-    }
-
-    .avatar-accessory {
-      position: absolute;
-      bottom: 115px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 40px;
-      height: 10px;
-      border-radius: 10px;
-      background: #00a2ff;
-      display: none;
-    }
-
-    /* Catalog */
-    .catalog-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-      gap: 12px;
-    }
-
-    .item-card {
-      background: #fafafa;
-      border-radius: 8px;
-      padding: 10px;
-      border: 1px solid #e0e0e0;
-      font-size: 13px;
-    }
-
-    .item-name {
-      font-weight: 600;
-      margin-bottom: 4px;
-    }
-
-    .item-meta {
-      font-size: 12px;
-      color: #666;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 2px 6px;
-      border-radius: 10px;
-      font-size: 11px;
-      margin-right: 4px;
-      margin-top: 4px;
-    }
-
-    .badge-rare { background: #e3f2fd; color: #1976d2; }
-    .badge-epic { background: #f3e5f5; color: #7b1fa2; }
-    .badge-legendary { background: #fff3e0; color: #ef6c00; }
-
-    /* Trades */
-    .trade-list {
-      font-size: 13px;
-    }
-
-    .trade-entry {
-      border-bottom: 1px solid #eee;
-      padding: 6px 0;
-    }
-
-    .muted {
-      font-size: 12px;
-      color: #777;
-    }
-
-    /* Views */
-    .view {
-      display: none;
-    }
-
-    .view.active {
-      display: block;
-    }
-
-    .error {
-      color: #d32f2f;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .success {
-      color: #388e3c;
-      font-size: 13px;
-      margin-top: 4px;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="top-bar">
-    <div class="logo-text">LokBlox</div>
-    <div class="nav-links">
-      <a data-view="home">Home</a>
-      <a data-view="catalog">Catalog</a>
-      <a data-view="profile">Profile</a>
-      <a data-view="trades">Trades</a>
-    </div>
-    <div class="nav-right">
-      <span class="nav-username" id="navUserLabel">Guest</span>
-      <button class="nav-btn" id="authButton">Sign Up / Login</button>
-    </div>
-  </div>
-
-  <!-- MAIN VIEWS -->
-  <div id="homeView" class="view active">
-    <div class="container">
-      <div class="column-wide">
-        <div class="panel">
-          <h2>Welcome to LokBlox</h2>
-          <p>LokBlox is a classic-style economy revival where you can sign up, customize an avatar, collect fake limiteds, and trade with other users. Everything runs in your browser using localStorage—no real money, just vibes.</p>
-          <button class="btn" data-view="catalog">Open Catalog</button>
-        </div>
-      </div>
-      <div class="column">
-        <div class="panel">
-          <h2>Quick Stats</h2>
-          <p id="statUsers">Users: 0</p>
-          <p id="statItems">Items in Catalog: 0</p>
-          <p id="statTrades">Trades Created: 0</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="catalogView" class="view">
-    <div class="container">
-      <div class="column-wide">
-        <div class="panel">
-          <h2>Catalog</h2>
-          <p>Browse all LokBlox limiteds. These are fictional items stored in your browser.</p>
-          <div id="catalogGrid" class="catalog-grid"></div>
-        </div>
-      </div>
-      <div class="column">
-        <div class="panel">
-          <h2>Upload Item</h2>
-          <p class="muted">Items you add are visible only in this browser (localStorage).</p>
-          <label class="label">Item Name</label>
-          <input id="itemNameInput" class="input" placeholder="Crimson Crown of Lok">
-          <label class="label">Rarity</label>
-          <select id="itemRarityInput" class="select">
-            <option value="rare">Rare</option>
-            <option value="epic">Epic</option>
-            <option value="legendary">Legendary</option>
-          </select>
-          <label class="label">Value</label>
-          <input id="itemValueInput" class="input" type="number" placeholder="3200">
-          <button class="btn" id="addItemButton">Add Item</button>
-          <div id="itemMessage"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="profileView" class="view">
-    <div class="container">
-      <div class="column">
-        <div class="panel">
-          <h2>Avatar</h2>
-          <div class="avatar-preview">
-            <div class="avatar-body" id="avatarBody"></div>
-            <div class="avatar-head" id="avatarHead"></div>
-            <div class="avatar-hat" id="avatarHat"></div>
-            <div class="avatar-accessory" id="avatarAccessory"></div>
-          </div>
-
-          <label class="label">Body Color</label>
-          <select id="bodyColorInput" class="select">
-            <option value="#4caf50">Green</option>
-            <option value="#2196f3">Blue</option>
-            <option value="#ff9800">Orange</option>
-            <option value="#9c27b0">Purple</option>
-          </select>
-
-          <label class="label">Hat</label>
-          <select id="hatInput" class="select">
-            <option value="none">None</option>
-            <option value="black">Black Hat</option>
-            <option value="red">Red Hat</option>
-            <option value="blue">Blue Hat</option>
-          </select>
-
-          <label class="label">Accessory</label>
-          <select id="accessoryInput" class="select">
-            <option value="none">None</option>
-            <option value="visor">Visor</option>
-            <option value="band">Headband</option>
-          </select>
-
-          <button class="btn" id="saveAvatarButton">Save Avatar</button>
-          <div id="avatarMessage"></div>
-        </div>
-      </div>
-
-      <div class="column-wide">
-        <div class="panel">
-          <h2>Profile</h2>
-          <p><strong>Username:</strong> <span id="profileUsername">Guest</span></p>
-          <p><strong>Net Worth (fake):</strong> <span id="profileNetWorth">0</span></p>
-          <h3>Inventory</h3>
-          <p class="muted">Inventory is just a list of item IDs you “own” in this browser.</p>
-          <div id="inventoryList" class="catalog-grid"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="tradesView" class="view">
-    <div class="container">
-      <div class="column-wide">
-        <div class="panel">
-          <h2>Trades</h2>
-          <p>Create trades between users. This is all fake and stored in localStorage.</p>
-
-          <label class="label">To User</label>
-          <select id="tradeToUserInput" class="select"></select>
-
-          <label class="label">Offer Item ID (from your inventory)</label>
-          <input id="tradeOfferItemInput" class="input" placeholder="Item ID">
-
-          <label class="label">Request Item ID</label>
-          <input id="tradeRequestItemInput" class="input" placeholder="Item ID">
-
-          <button class="btn" id="createTradeButton">Create Trade</button>
-          <div id="tradeMessage"></div>
-        </div>
-
-        <div class="panel">
-          <h3>Your Trades</h3>
-          <div id="tradeList" class="trade-list"></div>
-        </div>
-      </div>
-
-      <div class="column">
-        <div class="panel">
-          <h2>Info</h2>
-          <p class="muted">
-            • Users, items, avatars, and trades are all stored in your browser using localStorage.<br>
-            • This is not secure or real—just for fun and vibes.<br>
-            • To reset everything, clear your browser storage for this site.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- AUTH MODAL (simple inline) -->
-  <div id="authModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); align-items:center; justify-content:center;">
-    <div style="background:#fff; padding:20px; border-radius:8px; width:300px; box-shadow:0 2px 8px rgba(0,0,0,0.3);">
-      <h3 style="margin-top:0; color:#00a2ff;">Sign Up / Login</h3>
-      <p class="muted">Type a username to create or switch accounts in this browser.</p>
-      <input id="authUsernameInput" class="input" placeholder="Username">
-      <button class="btn" id="authSubmitButton">Continue</button>
-      <button class="btn" style="background:#ccc;color:#333;margin-left:6px;" id="authCancelButton">Cancel</button>
-      <div id="authMessage"></div>
-    </div>
-  </div>
-
-  <div class="footer">
-    LokBlox is a fan-made project inspired by classic economy vibes.<br>
-    Not affiliated with Roblox Corporation. All data is fake and local.
-  </div>
-
-  <script>
-    // ====== DATA LAYER (localStorage) ======
-    const STORAGE_KEY = 'lokblox_data_v1';
-
-    function loadData() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        const initial = {
-          users: {},      // username -> { avatar, inventory: [itemIds] }
-          items: {},      // itemId -> { id, name, rarity, value, owner: username|null }
-          trades: [],     // { from, to, offerItemId, requestItemId, createdAt }
-          currentUser: null,
-          nextItemId: 1
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(initial));
-        return initial;
-      }
-      return JSON.parse(raw);
-    }
-
-    function saveData(data) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-
-    let db = loadData();
-
-    // Seed some default items if none exist
-    function seedItemsIfEmpty() {
-      if (Object.keys(db.items).length === 0) {
-        const defaults = [
-          { name: 'Crimson Crown of Lok', rarity: 'legendary', value: 3200 },
-          { name: 'Retro Lok Fedora', rarity: 'legendary', value: 5800 },
-          { name: 'Neon Brick Shades', rarity: 'epic', value: 1450 },
-          { name: 'Classic Lok Top Hat', rarity: 'rare', value: 980 }
-        ];
-        defaults.forEach(item => {
-          const id = db.nextItemId++;
-          db.items[id] = {
-            id,
-            name: item.name,
-            rarity: item.rarity,
-            value: item.value,
-            owner: null
-          };
-        });
-        saveData(db);
-      }
-    }
-    seedItemsIfEmpty();
-
-    // ====== VIEW SWITCHING ======
-    const views = {
-      home: document.getElementById('homeView'),
-      catalog: document.getElementById('catalogView'),
-      profile: document.getElementById('profileView'),
-      trades: document.getElementById('tradesView')
-    };
-
-    function showView(name) {
-      Object.keys(views).forEach(v => {
-        views[v].classList.toggle('active', v === name);
-      });
-      if (name === 'catalog') renderCatalog();
-      if (name === 'profile') renderProfile();
-      if (name === 'trades') renderTrades();
-      renderStats();
-    }
-
-    document.querySelectorAll('.nav-links a, button[data-view]').forEach(el => {
-      el.addEventListener('click', () => {
-        const view = el.getAttribute('data-view');
-        if (view) showView(view);
-      });
-    });
-
-    // ====== AUTH / USERS ======
-    const authModal = document.getElementById('authModal');
-    const authButton = document.getElementById('authButton');
-    const authUsernameInput = document.getElementById('authUsernameInput');
-    const authSubmitButton = document.getElementById('authSubmitButton');
-    const authCancelButton = document.getElementById('authCancelButton');
-    const authMessage = document.getElementById('authMessage');
-    const navUserLabel = document.getElementById('navUserLabel');
-
-    function openAuthModal() {
-      authUsernameInput.value = '';
-      authMessage.textContent = '';
-      authModal.style.display = 'flex';
-      authUsernameInput.focus();
-    }
-
-    function closeAuthModal() {
-      authModal.style.display = 'none';
-    }
-
-    authButton.addEventListener('click', openAuthModal);
-    authCancelButton.addEventListener('click', closeAuthModal);
-
-    authSubmitButton.addEventListener('click', () => {
-      const username = authUsernameInput.value.trim();
-      if (!username) {
-        authMessage.textContent = 'Username cannot be empty.';
-        authMessage.className = 'error';
-        return;
-      }
-
-      if (!db.users[username]) {
-        // create new user
-        db.users[username] = {
-          avatar: {
-            bodyColor: '#4caf50',
-            hat: 'none',
-            accessory: 'none'
-          },
-          inventory: []
-        };
-      }
-      db.currentUser = username;
-      saveData(db);
-      navUserLabel.textContent = username;
-      authMessage.textContent = 'Logged in as ' + username;
-      authMessage.className = 'success';
-      setTimeout(closeAuthModal, 500);
-      renderProfile();
-      renderTrades();
-      renderStats();
-    });
-
-    function getCurrentUser() {
-      if (!db.currentUser) return null;
-      return db.users[db.currentUser] || null;
-    }
-
-    // ====== STATS ======
-    const statUsers = document.getElementById('statUsers');
-    const statItems = document.getElementById('statItems');
-    const statTrades = document.getElementById('statTrades');
-
-    function renderStats() {
-      statUsers.textContent = 'Users: ' + Object.keys(db.users).length;
-      statItems.textContent = 'Items in Catalog: ' + Object.keys(db.items).length;
-      statTrades.textContent = 'Trades Created: ' + db.trades.length;
-    }
-
-    // ====== CATALOG ======
-    const catalogGrid = document.getElementById('catalogGrid');
-    const itemNameInput = document.getElementById('itemNameInput');
-    const itemRarityInput = document.getElementById('itemRarityInput');
-    const itemValueInput = document.getElementById('itemValueInput');
-    const addItemButton = document.getElementById('addItemButton');
-    const itemMessage = document.getElementById('itemMessage');
-
-    function rarityBadgeClass(r) {
-      if (r === 'rare') return 'badge badge-rare';
-      if (r === 'epic') return 'badge badge-epic';
-      if (r === 'legendary') return 'badge badge-legendary';
-      return 'badge';
-    }
-
-    function renderCatalog() {
-      catalogGrid.innerHTML = '';
-      const items = Object.values(db.items).sort((a,b) => b.value - a.value);
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-          <div class="item-name">${item.name}</div>
-          <div class="item-meta">ID: ${item.id}</div>
-          <div class="item-meta">Value: ${item.value}</div>
-          <div class="item-meta">Owner: ${item.owner || 'None'}</div>
-          <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
-        `;
-        catalogGrid.appendChild(div);
-      });
-    }
-
-    addItemButton.addEventListener('click', () => {
-      const name = itemNameInput.value.trim();
-      const rarity = itemRarityInput.value;
-      const value = parseInt(itemValueInput.value, 10);
-
-      if (!name || isNaN(value) || value <= 0) {
-        itemMessage.textContent = 'Please enter a valid name and value.';
-        itemMessage.className = 'error';
-        return;
-      }
-
-      const id = db.nextItemId++;
-      db.items[id] = {
-        id,
-        name,
-        rarity,
-        value,
-        owner: db.currentUser || null
-      };
-
-      // if user logged in, add to their inventory
-      if (db.currentUser) {
-        db.users[db.currentUser].inventory.push(id);
-      }
-
-      saveData(db);
-      itemMessage.textContent = 'Item added with ID ' + id;
-      itemMessage.className = 'success';
-      itemNameInput.value = '';
-      itemValueInput.value = '';
-      renderCatalog();
-      renderProfile();
-      renderStats();
-    });
-
-    // ====== AVATAR & PROFILE ======
-    const avatarBody = document.getElementById('avatarBody');
-    const avatarHat = document.getElementById('avatarHat');
-    const avatarAccessory = document.getElementById('avatarAccessory');
-    const bodyColorInput = document.getElementById('bodyColorInput');
-    const hatInput = document.getElementById('hatInput');
-    const accessoryInput = document.getElementById('accessoryInput');
-    const saveAvatarButton = document.getElementById('saveAvatarButton');
-    const avatarMessage = document.getElementById('avatarMessage');
-
-    const profileUsername = document.getElementById('profileUsername');
-    const profileNetWorth = document.getElementById('profileNetWorth');
-    const inventoryList = document.getElementById('inventoryList');
-
-    function applyAvatar(avatar) {
-      avatarBody.style.background = avatar.bodyColor || '#4caf50';
-
-      if (avatar.hat && avatar.hat !== 'none') {
-        avatarHat.style.display = 'block';
-        if (avatar.hat === 'black') avatarHat.style.background = '#000';
-        if (avatar.hat === 'red') avatarHat.style.background = '#f44336';
-        if (avatar.hat === 'blue') avatarHat.style.background = '#2196f3';
-      } else {
-        avatarHat.style.display = 'none';
-      }
-
-      if (avatar.accessory && avatar.accessory !== 'none') {
-        avatarAccessory.style.display = 'block';
-        avatarAccessory.style.background = '#00a2ff';
-      } else {
-        avatarAccessory.style.display = 'none';
-      }
-    }
-
-    function renderProfile() {
-      const user = getCurrentUser();
-      if (!user) {
-        profileUsername.textContent = 'Guest';
-        profileNetWorth.textContent = '0';
-        inventoryList.innerHTML = '<p class="muted">Log in to see inventory.</p>';
-        avatarMessage.textContent = 'You are not logged in.';
-        avatarMessage.className = 'error';
-        applyAvatar({ bodyColor: '#4caf50', hat: 'none', accessory: 'none' });
-        return;
-      }
-
-      profileUsername.textContent = db.currentUser;
-
-      // avatar
-      bodyColorInput.value = user.avatar.bodyColor || '#4caf50';
-      hatInput.value = user.avatar.hat || 'none';
-      accessoryInput.value = user.avatar.accessory || 'none';
-      applyAvatar(user.avatar);
-
-      // inventory
-      inventoryList.innerHTML = '';
-      let netWorth = 0;
-      user.inventory.forEach(id => {
-        const item = db.items[id];
-        if (!item) return;
-        netWorth += item.value;
-        const div = document.createElement('div');
-        div.className = 'item-card';
-        div.innerHTML = `
-          <div class="item-name">${item.name}</div>
-          <div class="item-meta">ID: ${item.id}</div>
-          <div class="item-meta">Value: ${item.value}</div>
-          <span class="${rarityBadgeClass(item.rarity)}">${item.rarity.toUpperCase()}</span>
-        `;
-        inventoryList.appendChild(div);
-      });
-      profileNetWorth.textContent = netWorth;
-      avatarMessage.textContent = '';
-    }
-
-    saveAvatarButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user) {
-        avatarMessage.textContent = 'You must be logged in to save avatar.';
-        avatarMessage.className = 'error';
-        return;
-      }
-      user.avatar.bodyColor = bodyColorInput.value;
-      user.avatar.hat = hatInput.value;
-      user.avatar.accessory = accessoryInput.value;
-      applyAvatar(user.avatar);
-      saveData(db);
-      avatarMessage.textContent = 'Avatar saved.';
-      avatarMessage.className = 'success';
-    });
-
-    // ====== TRADES ======
-    const tradeToUserInput = document.getElementById('tradeToUserInput');
-    const tradeOfferItemInput = document.getElementById('tradeOfferItemInput');
-    const tradeRequestItemInput = document.getElementById('tradeRequestItemInput');
-    const createTradeButton = document.getElementById('createTradeButton');
-    const tradeMessage = document.getElementById('tradeMessage');
-    const tradeList = document.getElementById('tradeList');
-
-    function renderTrades() {
-      const user = getCurrentUser();
-
-      // populate user dropdown
-      tradeToUserInput.innerHTML = '';
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = 'Select user';
-      tradeToUserInput.appendChild(placeholder);
-
-      Object.keys(db.users).forEach(username => {
-        if (db.currentUser && username === db.currentUser) return;
-        const opt = document.createElement('option');
-        opt.value = username;
-        opt.textContent = username;
-        tradeToUserInput.appendChild(opt);
-      });
-
-      // list trades
-      tradeList.innerHTML = '';
-      if (!user) {
-        tradeList.innerHTML = '<p class="muted">Log in to view your trades.</p>';
-        return;
-      }
-
-      const myTrades = db.trades.filter(t => t.from === db.currentUser || t.to === db.currentUser);
-      if (myTrades.length === 0) {
-        tradeList.innerHTML = '<p class="muted">No trades yet.</p>';
-        return;
-      }
-
-      myTrades.forEach(t => {
-        const div = document.createElement('div');
-        div.className = 'trade-entry';
-        div.innerHTML = `
-          <div><strong>${t.from}</strong> → <strong>${t.to}</strong></div>
-          <div>Offers Item ID: ${t.offerItemId} | Requests Item ID: ${t.requestItemId}</div>
-          <div class="muted">${new Date(t.createdAt).toLocaleString()}</div>
-        `;
-        tradeList.appendChild(div);
-      });
-    }
-
-    createTradeButton.addEventListener('click', () => {
-      const user = getCurrentUser();
-      if (!user) {
-        tradeMessage.textContent = 'You must be logged in to create trades.';
-        tradeMessage.className = 'error';
-        return;
-      }
-
-      const toUser = tradeToUserInput.value;
-      const offerId = parseInt(tradeOfferItemInput.value, 10);
-      const requestId = parseInt(tradeRequestItemInput.value, 10);
-
-      if (!toUser) {
-        tradeMessage.textContent = 'Select a user to trade with.';
-        tradeMessage.className = 'error';
-        return;
-      }
-      if (isNaN(offerId) || isNaN(requestId)) {
-        tradeMessage.textContent = 'Enter valid item IDs.';
-        tradeMessage.className = 'error';
-        return;
-      }
-
-      // basic validation: offer item must be in your inventory
-      if (!user.inventory.includes(offerId)) {
-        tradeMessage.textContent = 'You do not own item ID ' + offerId;
-        tradeMessage.className = 'error';
-        return;
-      }
-
-      db.trades.push({
-        from: db.currentUser,
-        to: toUser,
-        offerItemId: offerId,
-        requestItemId: requestId,
-        createdAt: Date.now()
-      });
-      saveData(db);
-      tradeMessage.textContent = 'Trade created.';
-      tradeMessage.className = 'success';
-      tradeOfferItemInput.value = '';
-      tradeRequestItemInput.value = '';
-      renderTrades();
-      renderStats();
-    });
-
-    // ====== INIT ======
-    function init() {
-      if (db.currentUser) {
-        navUserLabel.textContent = db.currentUser;
-      }
-      renderStats();
-      renderCatalog();
-      renderProfile();
-      renderTrades();
-    }
-
-    init();
-  </script>
-</body>
-</html>
+      border: 1px solid var(--border-soft);
